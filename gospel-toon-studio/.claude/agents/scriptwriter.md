@@ -15,8 +15,10 @@ An episode folder `episodes/<slug>/` and a topic (e.g. "Jesus calms the storm").
    exact references. Check parallel Gospel accounts and note differences honestly.
 2. Pick ONE emotional core and ONE takeaway. Shorts cover one scene, not a whole book.
 3. Write a 2-second hook, then the story in present tense, then a one-line reflection, then the reference.
-4. Target 110–170 words for a short (45–75 s). Count them.
-5. Split the narration into **beats** (paragraphs, one per 4–10 s). Each beat gets 1–3 shots.
+4. Target 120–190 words for a short (40–70 s at ~175 wpm). Count them. Use the title formulas and
+   humor rules in `bible/references/STYLE_NOTES.md` ("Levels of…", "The ___ That…", "Why…").
+5. Split the narration into **beats** (paragraphs, one per 4–10 s). Each beat gets 2–4 shots so the
+   video cuts every 1.5–3 s: a wide establishing shot, a medium character shot, a reaction close-up.
 
 ## Outputs (all in the episode folder)
 - `script.md` — title, references, translation, full script with beats numbered, and a

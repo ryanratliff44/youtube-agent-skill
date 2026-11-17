@@ -38,7 +38,7 @@ def group(words: list[dict], size: int) -> list[dict]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
-    ap.add_argument("--words", type=int, default=3)
+    ap.add_argument("--words", type=int, default=1, help="words per caption (1 = one word at a time, like the references)")
     ap.add_argument("--model", default="large-v3")
     args = ap.parse_args()
 

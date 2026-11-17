@@ -1,6 +1,6 @@
 # John the apostle
 
 **Prompt token:**
-> John, a slim young Galilean man, olive skin, short wavy dark hair, light beard, sand-colored tunic
+> John, a slim bean-shaped cartoon young man with a round olive head, short wavy dark hair, light stubble, curious dot eyes, sand-colored tunic body
 
-**Notes:** Youngest disciple, quiet and observant.
+**Notes:** Youngest disciple, quiet and observant. A good 'side-eye' reaction character.

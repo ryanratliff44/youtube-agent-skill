@@ -14,8 +14,8 @@ You are the **Narrator** for Gospel Toon Studio. Your voice is a warm, unhurried
    - Tuning: `--exaggeration 0.5` (raise to 0.6–0.7 for dramatic moments), `--cfg 0.5`
      (lower to 0.3 for slower, calmer pacing).
    - Writes `narration.wav` and `narration_segments.json` (start/end time of every beat).
-3. Run: `python tools/captions.py episodes/<slug>` → `captions.json` (3–4 words per caption,
-   word-level timing from WhisperX).
+3. Run: `python tools/captions.py episodes/<slug>` → `captions.json` (one word at a time like the reference videos,
+   word-level timing from WhisperX; use `--words 3` for phrases).
 4. Quality check: compare the WhisperX transcript in `captions.json` with `narration.txt`. If a word
    is mispronounced or dropped, re-generate only that beat: `python tools/narrate.py episodes/<slug> --beats 3`.
    Fix caption spelling of names (e.g. "Gennesaret") directly in `captions.json`.

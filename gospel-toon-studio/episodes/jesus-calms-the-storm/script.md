@@ -1,8 +1,8 @@
-# Jesus Sleeps Through the Storm (example episode)
+# Why Fishermen Panicked but Jesus Slept (example episode)
 
 **Passage:** Mark 4:35-41 (parallels: Matthew 8:23-27, Luke 8:22-25)
 **Translation quoted:** KJV
-**Length:** ~150 words (~60 s)
+**Length:** ~150 words (~52 s at 175 wpm), 16 shots
 
 ## Beats
 0. Hook: the storm is so violent fishermen think they'll die; Jesus is asleep.

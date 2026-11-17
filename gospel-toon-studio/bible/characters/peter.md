@@ -1,6 +1,6 @@
 # Simon Peter
 
 **Prompt token:**
-> Peter, a broad-shouldered Galilean fisherman, tanned skin, curly black hair, thick short beard, rolled-up brown tunic, rope belt
+> Peter, a stocky bean-shaped cartoon fisherman with a round tanned head, curly black hair, thick short black beard, big expressive eyebrows, brown tunic body with rope belt
 
-**Notes:** Impulsive and big-hearted; the main source of gentle humor.
+**Notes:** Impulsive and big-hearted. The go-to reaction face (panic, shock, awe) and the main source of gentle humor.

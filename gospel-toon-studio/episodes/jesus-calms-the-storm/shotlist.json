@@ -1,12 +1,152 @@
-{"shots": [
-  {"id": "s01", "beat": 0, "characters": ["jesus"], "prompt": "Jesus peacefully asleep on a cushion at the stern of a small wooden fishing boat at night while huge storm waves tower behind him, lightning in dark clouds", "camera": "slow push in"},
-  {"id": "s02", "beat": 1, "characters": [], "prompt": "Sea of Galilee at sunset, calm water, green hills on the far shore, a small wooden fishing boat with a sail pushing off from a pebble beach", "camera": "pan right", "onscreen_text": "Mark 4:35-41"},
-  {"id": "s03", "beat": 1, "characters": ["jesus", "peter", "john"], "prompt": "Jesus, Peter and John climbing into a small wooden fishing boat on the shore at dusk, Peter holding the rope", "camera": "static"},
-  {"id": "s04", "beat": 2, "characters": ["peter"], "prompt": "a sudden storm on the lake at night, wind tearing the sail, waves crashing over the side of the small wooden boat, Peter gripping the mast", "camera": "static"},
-  {"id": "s05", "beat": 2, "characters": ["jesus"], "prompt": "close-up of Jesus asleep on a cushion at the back of the boat, rain falling, peaceful face", "camera": "slow push in"},
-  {"id": "s06", "beat": 3, "characters": ["peter", "jesus"], "prompt": "soaked and frightened Peter shaking Jesus awake in the stormy boat, water sloshing at their feet", "camera": "static"},
-  {"id": "s07", "beat": 4, "characters": ["jesus"], "prompt": "Jesus standing in the boat with one hand raised over the stormy sea, wind blowing his hair and robe", "camera": "slow push in"},
-  {"id": "s08", "beat": 4, "characters": [], "prompt": "the lake suddenly perfectly calm and glassy under clearing night clouds and bright stars, the small boat still on the water", "camera": "pull out"},
-  {"id": "s09", "beat": 5, "characters": ["peter", "john"], "prompt": "Peter and John sitting in the calm boat staring in awe, soaked, mouths open, moonlight on their faces", "camera": "static"},
-  {"id": "s10", "beat": 6, "characters": ["jesus"], "prompt": "the small boat gliding on calm moonlit water toward the far shore, Jesus at the stern looking ahead, warm lantern light", "camera": "pull out", "onscreen_text": "Mark 4:35-41"}
-]}
+{
+  "shots": [
+    {
+      "id": "s01",
+      "beat": 0,
+      "characters": [
+        "jesus"
+      ],
+      "prompt": "Jesus peacefully asleep on a cushion at the stern of a small wooden fishing boat at night while huge storm waves tower behind him, lightning in dark clouds",
+      "camera": "slow push in"
+    },
+    {
+      "id": "s01b",
+      "beat": 0,
+      "characters": [
+        "peter"
+      ],
+      "prompt": "close-up of Peter's panicked face, wide eyes, soaked hair, rain streaking, lightning flash lighting his face",
+      "camera": "static"
+    },
+    {
+      "id": "s02",
+      "beat": 1,
+      "characters": [],
+      "prompt": "Sea of Galilee at sunset, calm water, green hills on the far shore, a small wooden fishing boat with a sail pushing off from a pebble beach",
+      "camera": "pan right",
+      "onscreen_text": "Mark 4:35-41"
+    },
+    {
+      "id": "s03",
+      "beat": 1,
+      "characters": [
+        "jesus",
+        "peter",
+        "john"
+      ],
+      "prompt": "Jesus, Peter and John climbing into a small wooden fishing boat on the shore at dusk, Peter holding the rope",
+      "camera": "static"
+    },
+    {
+      "id": "s04",
+      "beat": 2,
+      "characters": [
+        "peter"
+      ],
+      "prompt": "a sudden storm on the lake at night, wind tearing the sail, waves crashing over the side of the small wooden boat, Peter gripping the mast",
+      "camera": "static"
+    },
+    {
+      "id": "s05",
+      "beat": 2,
+      "characters": [
+        "jesus"
+      ],
+      "prompt": "close-up of Jesus asleep on a cushion at the back of the boat, rain falling, peaceful face",
+      "camera": "slow push in"
+    },
+    {
+      "id": "s04b",
+      "beat": 2,
+      "characters": [
+        "john"
+      ],
+      "prompt": "close-up of John bailing water with a clay jar, eyes wide in panic, waves splashing over him",
+      "camera": "static"
+    },
+    {
+      "id": "s06",
+      "beat": 3,
+      "characters": [
+        "peter",
+        "jesus"
+      ],
+      "prompt": "soaked and frightened Peter shaking Jesus awake in the stormy boat, water sloshing at their feet",
+      "camera": "static"
+    },
+    {
+      "id": "s06b",
+      "beat": 3,
+      "characters": [
+        "peter"
+      ],
+      "prompt": "close-up of Peter shouting with arms thrown wide, rain and spray flying, dark stormy blue light",
+      "camera": "static"
+    },
+    {
+      "id": "s07",
+      "beat": 4,
+      "characters": [
+        "jesus"
+      ],
+      "prompt": "Jesus standing in the boat with one hand raised over the stormy sea, wind blowing his hair and robe",
+      "camera": "slow push in"
+    },
+    {
+      "id": "s08",
+      "beat": 4,
+      "characters": [],
+      "prompt": "the lake suddenly perfectly calm and glassy under clearing night clouds and bright stars, the small boat still on the water",
+      "camera": "pull out"
+    },
+    {
+      "id": "s07b",
+      "beat": 4,
+      "characters": [
+        "peter",
+        "john"
+      ],
+      "prompt": "Peter and John frozen mid-motion in the boat as the wind suddenly stops, droplets hanging in the air, a soft warm glow spreading over the water",
+      "camera": "slow push in"
+    },
+    {
+      "id": "s09",
+      "beat": 5,
+      "characters": [
+        "peter",
+        "john"
+      ],
+      "prompt": "Peter and John sitting in the calm boat staring in awe, soaked, mouths open, moonlight on their faces",
+      "camera": "static"
+    },
+    {
+      "id": "s09b",
+      "beat": 5,
+      "characters": [
+        "jesus"
+      ],
+      "prompt": "medium shot of Jesus in the calm boat turning to look at the disciples with a kind, patient expression, moonlight and a soft warm glow",
+      "camera": "static"
+    },
+    {
+      "id": "s09c",
+      "beat": 5,
+      "characters": [
+        "peter",
+        "john"
+      ],
+      "prompt": "Peter and John slowly turning to look at each other with stunned side-eye expressions, calm moonlit lake behind them",
+      "camera": "static"
+    },
+    {
+      "id": "s10",
+      "beat": 6,
+      "characters": [
+        "jesus"
+      ],
+      "prompt": "the small boat gliding on calm moonlit water toward the far shore, Jesus at the stern looking ahead, warm lantern light",
+      "camera": "pull out",
+      "onscreen_text": "Mark 4:35-41"
+    }
+  ]
+}

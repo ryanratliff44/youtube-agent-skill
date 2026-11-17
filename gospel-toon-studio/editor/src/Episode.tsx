@@ -94,22 +94,21 @@ const Moving: React.FC<{shot: Shot; frames: number}> = ({shot, frames}) => {
 const Caption: React.FC<{text: string}> = ({text}) => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
-	const pop = spring({frame, fps, config: {damping: 14, stiffness: 180}, durationInFrames: 8});
+	const pop = spring({frame, fps, config: {damping: 14, stiffness: 220}, durationInFrames: 5});
 	return (
-		// Sits at ~65% height: clear of the title area and of the TikTok/Reels button rail and caption at the bottom.
-		<AbsoluteFill style={{justifyContent: 'flex-start', alignItems: 'center', paddingTop: 1180, paddingLeft: 90, paddingRight: 140}}>
+		// One word at a time, ~67% down the frame: clear of faces and of the TikTok/Reels caption + button rail.
+		<AbsoluteFill style={{justifyContent: 'flex-start', alignItems: 'center', paddingTop: 1250, paddingLeft: 90, paddingRight: 140}}>
 			<div
 				style={{
-					fontFamily: '"Arial Black", Arial, sans-serif',
-					fontSize: 74,
+					fontFamily: '"Arial Black", "Helvetica Neue", Arial, sans-serif',
+					fontSize: 82,
 					fontWeight: 900,
-					color: '#fffaf0',
+					color: '#ffffff',
 					textAlign: 'center',
-					lineHeight: 1.1,
-					WebkitTextStroke: `10px ${INK}`,
+					lineHeight: 1.05,
+					WebkitTextStroke: '12px #111111',
 					paintOrder: 'stroke fill',
-					textShadow: '0 6px 18px rgba(0,0,0,0.45)',
-					transform: `scale(${0.85 + 0.15 * pop})`,
+					transform: `scale(${0.9 + 0.1 * pop})`,
 				}}
 			>
 				{text}

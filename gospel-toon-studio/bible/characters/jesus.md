@@ -1,6 +1,6 @@
 # Jesus of Nazareth
 
 **Prompt token:**
-> Jesus, a kind Middle Eastern man in his early thirties, olive-brown skin, dark brown shoulder-length hair, short dark beard, warm brown eyes, cream linen tunic with a muted blue sash, simple brown sandals
+> Jesus, a bean-shaped cartoon man with a round warm olive-brown head, dark brown shoulder-length hair, short dark beard, kind dot eyes with soft eyebrows, gentle smile, cream tunic body with a muted blue sash
 
-**Notes:** Calm, attentive posture; often kneeling to people's eye level. Never cartoonishly goofy.
+**Notes:** Always calm, kind and steady; often gets the soft warm glow in divine moments. Never goofy, never the joke. Gets the most screen space in his key moments.

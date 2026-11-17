@@ -3,4 +3,4 @@
 **Prompt token:**
 > parchment scroll texture, warm ochre border, hand-lettered serif title
 
-**Notes:** Used for opening title and closing scripture reference cards.
+**Notes:** Used for the closing scripture reference card.

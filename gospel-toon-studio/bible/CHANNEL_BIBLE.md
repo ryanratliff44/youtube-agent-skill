@@ -5,7 +5,7 @@ Short, warm, cartoon retellings of the life of Jesus and other Bible stories tha
 scripture, easy for all ages, and leave viewers wanting to read the passage themselves.
 
 ## Formats
-- **Short (default):** 45–75 s, 9:16, one story or one idea. Posts to TikTok, YouTube Shorts, Instagram Reels.
+- **Short (default):** 40–70 s, a funny, fast explainer (title patterns: "Levels of…", "The ___ That…", "Why…"), 9:16, one story or one idea. Posts to TikTok, YouTube Shorts, Instagram Reels.
 - **Long (optional):** 4–8 min, 16:9, a full narrative arc (e.g. "The Last Week of Jesus").
 
 ## Theology rules (non-negotiable)
@@ -21,23 +21,31 @@ scripture, easy for all ages, and leave viewers wanting to read the passage them
 7. **End with the source.** Close each video with the reference so viewers can read it.
 
 ## Voice & tone
-Warm storyteller, present tense, short sentences, ~150 words per minute. Hook in the first 2 seconds
+Confident, friendly storyteller, present tense, short punchy sentences, ~170–180 words per minute, light humor from human reactions. Hook in the first 2 seconds
 with a question or a surprising detail ("He touched a man nobody would touch."). No clickbait that
 misrepresents scripture.
 
-## Art style (default, refine from reference videos)
+## Art style (from the owner's favorite references — see references/STYLE_NOTES.md)
+Simple "bean people" characters in front of rich, painterly, moodily lit backgrounds.
+
 **Style prompt prefix** (the B-roll artist prepends this to every shot):
-> warm 2D storybook cartoon, clean bold outlines, soft cel shading, gentle painterly backgrounds,
-> earthy palette of ochre, olive, sandstone and sky blue, golden-hour light, expressive friendly
-> faces, first-century Judea setting, consistent character design, high quality animation
+> 2D cartoon animation, simple minimalist bean-shaped characters with big round heads, dot eyes,
+> expressive eyebrows, tiny mouths, no nose, pill-shaped bodies and thin stick arms and legs, thick
+> dark brown outlines, flat colors on characters, highly detailed painterly background with depth
+> and texture, dramatic cinematic lighting, first-century Judea setting, vertical 9:16 composition,
+> consistent character design
 
 **Negative prompt:**
-> photorealistic, 3d render, anime, text, watermark, logo, extra fingers, deformed hands, blurry,
-> gore, blood, modern clothing, modern buildings, harsh neon colors
+> photorealistic, 3d render, anime, realistic human proportions, detailed realistic faces, text,
+> watermark, logo, subtitles, extra limbs, deformed, blurry, gore, blood, modern clothing, modern
+> buildings, cars, phones
 
 - Aspect: 9:16 (1080×1920) for shorts.
-- Camera: slow, gentle moves (push-in, pan, parallax). No fast whip pans.
-- Light symbolism: Jesus is often framed in warm light; divine moments use soft glow, not lens flare.
+- Shots: alternate wide establishing shot → medium character shot → reaction close-up. Cut every 1.5–3 s.
+- Every scene has a lighting idea: golden sunset, lantern glow in a dark room, stormy blue night
+  lit by lightning, soft dawn at the tomb.
+- Divine moments use a soft warm glow around Jesus, never lens flares or neon.
+- Jesus is drawn in the same simple style, with calm and kind expressions. He is never the punchline.
 
 ## Characters
 Character sheets live in `bible/characters/<id>.md`. Each has a fixed **prompt token** that the
