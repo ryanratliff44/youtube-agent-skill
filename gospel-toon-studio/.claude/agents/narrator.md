@@ -21,6 +21,10 @@ You are the **Narrator** for Gospel Toon Studio. Your voice is a warm, unhurried
    Fix caption spelling of names (e.g. "Gennesaret") directly in `captions.json`.
 5. Report total duration. If it's over 75 s for a short, tell the producer which beats to trim.
 
+Alternative free voice (Santa, storyteller, no reference recording needed): activate `.venv-kokoro` and run
+`python tools/narrate_kokoro.py episodes/<slug> --voice am_santa` (try `bm_fable` too). It writes the same
+files, so captions and editing work unchanged (run `tools/captions.py` from the main `.venv`).
+
 If there is no GPU, Chatterbox still runs on CPU (slower). If the package isn't installed, run
 `pip install chatterbox-tts` (or `pip install -e ../../chatterbox` from the user's checkout).
 Write problems to `episodes/<slug>/notes/narrator.md`.

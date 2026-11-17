@@ -10,3 +10,5 @@ bible/references/*
 !bible/references/STYLE_NOTES.md
 bible/voice/*.wav
 __pycache__/
+
+.venv-kokoro/
