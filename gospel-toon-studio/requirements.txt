@@ -1,7 +1,10 @@
-# Narrator
+# Install PyTorch with CUDA FIRST (Windows + NVIDIA), then the rest:
+#   pip install torch==2.6.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124
+#   pip install -r requirements.txt
+# Narrator (Chatterbox pins torch 2.6.0)
 chatterbox-tts
-# Captions + reference study
-whisperx
+# Captions + reference study (word timestamps; no torch needed)
+faster-whisper
 # Publisher
 tiktok-uploader
 google-api-python-client

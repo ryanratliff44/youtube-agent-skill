@@ -51,13 +51,12 @@ def main() -> None:
 
     if not args.no_transcript:
         try:
-            import whisperx
-            audio = whisperx.load_audio(str(video))
-            model = whisperx.load_model("small", "cpu", compute_type="int8")
-            segs = model.transcribe(audio, batch_size=8)["segments"]
-            text = "\n".join(f"[{s['start']:.1f}] {s['text'].strip()}" for s in segs)
+            from faster_whisper import WhisperModel
+            model = WhisperModel("small.en", device="cpu", compute_type="int8")
+            segs = list(model.transcribe(str(video), language="en")[0])
+            text = "\n".join(f"[{s.start:.1f}] {s.text.strip()}" for s in segs)
             (out / "transcript.txt").write_text(text + "\n")
-            words = sum(len(s["text"].split()) for s in segs)
+            words = sum(len(s.text.split()) for s in segs)
             stats["words_per_minute"] = round(words / (duration / 60), 1)
         except Exception as e:  # transcript is optional
             stats["transcript_error"] = str(e)
