@@ -31,6 +31,10 @@ def main() -> None:
     only = {int(b) for b in args.beats.split(",")} if args.beats else None
 
     device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
+    if device != "cuda":
+        # Chatterbox weights were saved on CUDA; load them onto this device (same patch as chatterbox/example_for_mac.py).
+        _load = torch.load
+        torch.load = lambda *a, **k: _load(*a, **({"map_location": torch.device(device)} | k))
     model = ChatterboxTTS.from_pretrained(device=device)
     voice = args.voice if __import__("os").path.exists(args.voice) else None
     print(f"device={device} voice={'cloned' if voice else 'default'} beats={len(texts)}")
