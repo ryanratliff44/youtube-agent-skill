@@ -1,11 +1,14 @@
 """Narrator: narration.txt -> narration.wav + narration_segments.json using Chatterbox TTS.
 
-python tools/narrate.py episodes/<slug> [--beats 2,5] [--exaggeration 0.5] [--cfg 0.5] [--pause 0.45]
+python tools/narrate.py episodes/<slug> [--beats 2,5] [--exaggeration 0.5] [--cfg 0.3] [--speed 0.93] [--pause 0.55]
 """
 
 from __future__ import annotations
 
 import argparse
+import os
+import subprocess
+import tempfile
 
 from common import BIBLE, beats, episode_dir, write_json
 
@@ -15,8 +18,9 @@ def main() -> None:
     ap.add_argument("episode")
     ap.add_argument("--beats", help="comma-separated beat indexes to regenerate (others reused)")
     ap.add_argument("--exaggeration", type=float, default=0.5)
-    ap.add_argument("--cfg", type=float, default=0.5)
-    ap.add_argument("--pause", type=float, default=0.45, help="seconds of silence between beats")
+    ap.add_argument("--cfg", type=float, default=0.3, help="lower = slower, calmer pacing (0.2-0.5)")
+    ap.add_argument("--pause", type=float, default=0.55, help="seconds of silence between beats")
+    ap.add_argument("--speed", type=float, default=0.93, help="playback speed after generation, pitch kept (0.85-1.0); 1.0 = as generated")
     ap.add_argument("--voice", default=str(BIBLE / "voice" / "narrator_ref.wav"))
     args = ap.parse_args()
 
@@ -50,7 +54,12 @@ def main() -> None:
     silence = torch.zeros(1, int(model.sr * args.pause))
     chunks, segments, t = [], [], 0.0
     for i, text in enumerate(texts):
-        wav, sr = ta.load(str(parts / f"beat{i:02d}.wav"))
+        src = str(parts / f"beat{i:02d}.wav")
+        if abs(args.speed - 1.0) > 0.005:
+            tmp = os.path.join(tempfile.gettempdir(), f"toon_beat{i:02d}.wav")
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", src, "-filter:a", f"atempo={args.speed}", tmp], check=True)
+            src = tmp
+        wav, sr = ta.load(src)
         if sr != model.sr:
             wav = ta.functional.resample(wav, sr, model.sr)
         wav = wav.mean(0, keepdim=True)
