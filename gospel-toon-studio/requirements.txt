@@ -1,0 +1,8 @@
+# Narrator
+chatterbox-tts
+# Captions + reference study
+whisperx
+# Publisher
+tiktok-uploader
+google-api-python-client
+google-auth-oauthlib

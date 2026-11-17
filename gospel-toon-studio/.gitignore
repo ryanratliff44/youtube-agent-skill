@@ -1,0 +1,12 @@
+.env
+secrets/
+editor/node_modules/
+episodes/**/*.mp4
+episodes/**/*.wav
+episodes/**/*.png
+episodes/**/*.jpg
+episodes/*/narration_parts/
+bible/references/*
+!bible/references/STYLE_NOTES.md
+bible/voice/*.wav
+__pycache__/
