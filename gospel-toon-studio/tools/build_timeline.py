@@ -54,6 +54,7 @@ EMOTIONS = ["neutral", "calm", "joy", "laugh", "fear", "panic", "anger", "sad", 
 WORLD_STAGE = {  # default standing spots (x along the boat/shore, z across); the mast is at x=1.5, keep clear of it
     "boat": {1: [[-0.8, 0.1]], 2: [[-1.7, 0.1], [-0.2, 0.35]], 3: [[-2.3, 0.05], [-1.1, 0.35], [0.1, 0.1]]},
     "shore": {1: [[0, 0.3]], 2: [[-0.9, 0.3], [0.9, 0.5]], 3: [[-1.5, 0.5], [0, 0.2], [1.4, 0.6]]},
+    "camp": {1: [[0, 0.3]], 2: [[-0.9, 0.4], [0.9, 0.6]], 3: [[-1.6, 0.6], [0, 0.3], [1.5, 0.7]]},
 }
 # Camera: ONE big pivotal zoom at the very start, then only calm, slow moves.
 CALM_CAMS = {"whip": "medium", "dutch": "low_hero", "pulse": "medium", "punch": "medium", "punch-out": "wide", "handheld": "medium",
@@ -63,7 +64,7 @@ FOLLOW_UPS = ["medium", "close", "medium", "close", "low_hero", "close"]  # afte
 
 
 def place_in_world(actors: list[dict], world: str) -> None:
-    kind = "shore" if world == "dusk_shore" else "boat"
+    kind = {"dusk_shore": "shore", "camp_night": "camp"}.get(world, "boat")
     spots = WORLD_STAGE[kind].get(min(len(actors), 3), [])
     for i, a in enumerate(actors):
         if a.get("at") is None and i < len(spots):

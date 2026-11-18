@@ -99,6 +99,22 @@ const happyArc = (s: number, up = true): P[] => [
 	[ex(s, 1, 0.07), 0.04 + (up ? -0.002 : 0.012)],
 ];
 
+const Grin: React.FC<{open: number; w?: number}> = ({open, w = 0.085}) => {
+	const h = 0.036 + open * 0.05;
+	return (
+		<group position={onSphere(0, -0.15, 0.004)}>
+			<mesh scale={[w, h, 0.02]}>
+				<sphereGeometry args={[1, 18, 12]} />
+				<meshBasicMaterial color={INK} />
+			</mesh>
+			<mesh position={[0, h * 0.45, 0.03]} scale={[w * 0.8, h * 0.4, 1]}>
+				<boxGeometry args={[1, 1, 0.01]} />
+				<meshBasicMaterial color="#ffffff" />
+			</mesh>
+		</group>
+	);
+};
+
 export type FaceProps = {emotion: string; blink: number; open: number; look: number; pulse: number; t: number};
 
 export const Face: React.FC<FaceProps> = ({emotion: e, blink, open, look, pulse, t}) => {
@@ -113,7 +129,7 @@ export const Face: React.FC<FaceProps> = ({emotion: e, blink, open, look, pulse,
 
 	const talk = open > 0.06;
 	const talking = (w = 0.05, h = 0.012, y = -0.16) => (
-		<group position={onSphere(0, y, 0.004)} scale={[w + open * 0.035, h + open * 0.05, 0.3]}>
+		<group position={onSphere(0, y, 0.004)} scale={[w + open * 0.035, h + open * 0.05, 0.02]}>
 			<mesh>
 				<sphereGeometry args={[1, 16, 12]} />
 				<meshBasicMaterial color={INK} />
@@ -125,12 +141,12 @@ export const Face: React.FC<FaceProps> = ({emotion: e, blink, open, look, pulse,
 		case 'joy':
 			eyes = sides.map((s) => <Stroke key={s} pts={happyArc(s)} r={0.016} />);
 			brows = sides.map((s) => <Stroke key={s} pts={brow(s, 0.02, 0.025, 0.02, 0.17)} />);
-			mouth = talk ? talking(0.075, 0.03, -0.15) : <Stroke pts={[[-0.1, -0.12], [-0.05, -0.17], [0, -0.185], [0.05, -0.17], [0.1, -0.12]]} />;
+			mouth = <Grin open={talk ? open : 0.25} />;
 			break;
 		case 'laugh':
 			eyes = sides.map((s) => <Stroke key={s} pts={happyArc(s)} r={0.017} />);
 			brows = sides.map((s) => <Stroke key={s} pts={brow(s, 0.025, 0.03, 0.02, 0.17)} />);
-			mouth = talking(0.085, 0.045 + 0.02 * Math.abs(Math.sin(t * 14)), -0.15);
+			mouth = <Grin open={0.5 + 0.4 * Math.abs(Math.sin(t * 14))} w={0.095} />;
 			break;
 		case 'fear':
 			eyes = sides.map((s) => eyeDot(s, 0.04, 0.04));

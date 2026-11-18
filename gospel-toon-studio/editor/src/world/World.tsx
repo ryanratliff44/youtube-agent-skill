@@ -4,7 +4,7 @@ import {useThree} from '@react-three/fiber';
 import * as THREE from 'three';
 import {Cam, V3, boatPose, boatToWorld, camBasis, lightning} from './math';
 import {Char3D, Char3DProps} from './Character3D';
-import {Boat, Bolt, Clouds, DECK_Y, Rain, SCENES, Sea, Sky, Stars, Terrain, Village, groundY} from './Scenes';
+import {CampProps, Boat, Bolt, Clouds, DECK_Y, Rain, SCENES, Sea, Sky, Stars, Terrain, Village, groundY} from './Scenes';
 
 const CameraRig: React.FC<{cam: Cam}> = ({cam}) => {
 	const {camera} = useThree();
@@ -27,11 +27,11 @@ const CameraRig: React.FC<{cam: Cam}> = ({cam}) => {
 export const stageToWorld = (scene: string, local: V3, t: number): V3 => {
 	const cfg = SCENES[scene];
 	const pose = boatPose(t, cfg.sea.amp, cfg.boat.base);
-	if (cfg.terrain === 'shore') {
+	if (cfg.terrain !== 'ring') {
 		const sb = cfg.stageBase ?? cfg.boat.base;
 		const x = sb[0] + local[0];
 		const z = sb[1] + local[2];
-		return [x, groundY(x, z) + local[1], z];
+		return [x, groundY(x, z, cfg.terrain === 'camp' ? 'camp' : 'shore') + local[1], z];
 	}
 	return boatToWorld(pose, [local[0], DECK_Y + local[1], local[2]]);
 };
@@ -43,7 +43,7 @@ export type Placed = Char3DProps & {key: string; pos: V3; yaw: number};
 export const World: React.FC<{scene: string; t: number; cam: Cam; W: number; H: number; chars?: Placed[]}> = ({scene, t, cam, W, H, chars = []}) => {
 	const cfg = SCENES[scene] ?? SCENES.calm_night;
 	const flash = cfg.lightning ? lightning(t).flash : 0;
-	const onBoat = cfg.terrain !== 'shore';
+	const onBoat = cfg.terrain === 'ring';
 	const pose = boatPose(t, cfg.sea.amp, cfg.boat.base);
 	return (
 		<ThreeCanvas width={W} height={H} flat camera={{fov: cam.fov, near: 0.1, far: 2500, position: cam.pos}}>
@@ -53,10 +53,11 @@ export const World: React.FC<{scene: string; t: number; cam: Cam; W: number; H: 
 			<directionalLight color={cfg.key.color} intensity={cfg.key.intensity + flash * 2.2} position={cfg.key.dir.map((v) => v * 80) as V3} />
 			<Sky cfg={cfg} at={cam.pos} flash={flash} t={t} />
 			{cfg.sky.stars ? <Stars at={cam.pos} /> : null}
-			<Sea cfg={cfg} t={t} flash={flash} at={cam.pos} />
+			{cfg.noSea ? null : <Sea cfg={cfg} t={t} flash={flash} at={cam.pos} />}
 			<Terrain cfg={cfg} />
 			{cfg.village ? <Village /> : null}
-			<Boat cfg={cfg} t={t} />
+			{cfg.noBoat ? null : <Boat cfg={cfg} t={t} />}
+			{cfg.camp ? <CampProps t={t} /> : null}
 			{chars.map(({key, pos, yaw, ...p}) => (
 				<group key={key} position={pos} rotation={onBoat ? new THREE.Euler(pose.roll * 0.8, yaw, pose.pitch * 0.8, 'YZX') : new THREE.Euler(0, yaw, 0)}>
 					<Char3D {...p} light={Math.min(1.25, cfg.charLight * (1 + flash * 0.7))} />

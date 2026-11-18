@@ -13,17 +13,41 @@ const D = Math.PI / 180;
 
 const LightCtx = createContext(1);
 
+// clothing patterns drawn on a small canvas, like the printed vests in the reference
+const patternCache = new Map<string, THREE.Texture>();
+const patternTex = (kind: string, base: string, ink: string): THREE.Texture => {
+	const key = kind + base + ink;
+	const hit = patternCache.get(key);
+	if (hit) return hit;
+	const cv = document.createElement('canvas');
+	cv.width = 256;
+	cv.height = 256;
+	const g = cv.getContext('2d') as CanvasRenderingContext2D;
+	g.fillStyle = base;
+	g.fillRect(0, 0, 256, 256);
+	g.fillStyle = ink;
+	g.strokeStyle = ink;
+	if (kind === 'stripes') for (let x = 0; x < 256; x += 22) g.fillRect(x, 0, 8, 256);
+	if (kind === 'dots') for (let y = 12; y < 256; y += 26) for (let x = (y / 26) % 2 ? 6 : 19; x < 256; x += 26) { g.beginPath(); g.arc(x, y, 6, 0, 7); g.fill(); }
+	if (kind === 'bands') for (let y = 20; y < 256; y += 50) { g.fillRect(0, y, 256, 14); g.fillStyle = base; g.fillRect(0, y + 5, 256, 4); g.fillStyle = ink; }
+	const tx = new THREE.CanvasTexture(cv);
+	tx.wrapS = tx.wrapT = THREE.RepeatWrapping;
+	tx.colorSpace = THREE.SRGBColorSpace;
+	patternCache.set(key, tx);
+	return tx;
+};
+
 const flat = (hex: string, light: number) => new THREE.Color(hex).multiplyScalar(light);
 
-type PartProps = {pos?: [number, number, number]; rot?: [number, number, number]; scale?: [number, number, number]; color: string; outline?: number; children: React.ReactNode};
+type PartProps = {tex?: THREE.Texture; pos?: [number, number, number]; rot?: [number, number, number]; scale?: [number, number, number]; color: string; outline?: number; children: React.ReactNode};
 
-const Part: React.FC<PartProps> = ({pos = [0, 0, 0], rot = [0, 0, 0], scale = [1, 1, 1], color, outline = 1.09, children}) => {
+const Part: React.FC<PartProps> = ({tex, pos = [0, 0, 0], rot = [0, 0, 0], scale = [1, 1, 1], color, outline = 1.09, children}) => {
 	const light = useContext(LightCtx);
 	return (
 		<group position={pos} rotation={rot} scale={scale}>
 			<mesh>
 				{children}
-				<meshBasicMaterial color={flat(color, light)} />
+				<meshBasicMaterial color={tex ? new THREE.Color(light, light, light) : flat(color, light)} map={tex ?? null} />
 			</mesh>
 			{outline > 1 ? (
 				<mesh scale={outline}>
@@ -41,6 +65,8 @@ const Stick: React.FC<{len: number; r: number}> = ({len, r}) => (
 		<meshBasicMaterial color={INK} />
 	</mesh>
 );
+
+const PATTERN: Record<string, [string, string]> = {peter: ['stripes', '#6b4423'], john: ['dots', '#8a6d3b'], crowd: ['bands', '#566a3a'], mary: ['dots', '#b9c8e6']};
 
 export type Char3DProps = {
 	char: string;
@@ -124,7 +150,7 @@ export const Char3D: React.FC<Char3DProps> = ({char, emotion, t, mouth, walk, sp
 				<group position={[0, -drop, 0]} rotation={[lean, 0, 0]} scale={[1 / Math.sqrt(squash), squash, 1 / Math.sqrt(squash)]}>
 				{/* flat colored bean body */}
 				<group position={[0, 1.12, 0]}>
-					<Part color={def.robe} outline={1.07}>
+					<Part color={def.robe} outline={1.07} tex={PATTERN[char] ? patternTex(PATTERN[char][0], def.robe, PATTERN[char][1]) : undefined}>
 						<capsuleGeometry args={[0.27, 0.42, 6, 16]} />
 					</Part>
 					{def.sash ? (

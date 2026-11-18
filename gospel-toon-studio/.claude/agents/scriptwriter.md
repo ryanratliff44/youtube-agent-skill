@@ -48,6 +48,7 @@ An episode folder `episodes/<slug>/` and a topic (e.g. "Jesus calms the storm").
     often: characters should come and go, not stand still.
   - `speaker`: whose mouth moves with the narration words (default: the first actor). Gestures and head nods
     come with it. Optional per actor: `scale`, `flip`, `y`, `glow`.
+  - `world`: the 3D place: `storm_night` (boat in a storm), `calm_night` (boat on a still starry lake), `dusk_shore` (beach at sunset), `camp_night` (night camp with fire, torches, tents). Every shot needs one, and every shot needs a character.
   - `mood`: day, dusk, night, storm or calm. Storms also shake the camera.
   - `camera`: punch in, punch out, pulse, whip (fast pan with blur), dutch (tilted), handheld (shaky), zoom-in,
     pull out, pan left/right. Vary them shot to shot; the builder also cuts each scene into quick angles.

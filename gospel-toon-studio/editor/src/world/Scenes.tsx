@@ -14,7 +14,10 @@ export type SceneCfg = {
 	clouds: number; // 0 = none
 	cloudColor: string;
 	lightning: boolean;
-	terrain: 'ring' | 'shore';
+	terrain: 'ring' | 'shore' | 'camp';
+	noSea?: boolean;
+	noBoat?: boolean;
+	camp?: boolean; // campfire, tents, torches
 	terrainTint: string;
 	boat: {base: [number, number]; furl: number; lantern: boolean};
 	camFlip?: boolean; // put the camera on the water side looking at the land
@@ -25,6 +28,27 @@ export type SceneCfg = {
 };
 
 export const SCENES: Record<string, SceneCfg> = {
+	camp_night: {
+		sky: {top: '#070b1c', mid: '#1c2a4a', bottom: '#3a3f55', sun: [-0.5, 0.35, -0.8], sunColor: '#e9ecff', sunSize: 700, stars: true, disc: '#fffbe6', discSize: 0.9987},
+		fog: {color: '#2b3148', density: 0.012},
+		ambient: {color: '#5a6a9a', intensity: 0.85},
+		key: {color: '#aebfee', intensity: 0.9, dir: [-0.5, 0.7, 0.5]},
+		sea: {amp: 0, deep: '#000', mid: '#000', light: '#000', foam: '#000', foamH: 9},
+		rain: false,
+		clouds: 12,
+		cloudColor: '#161d36',
+		lightning: false,
+		terrain: 'camp',
+		terrainTint: '#ffffff',
+		boat: {base: [0, 0], furl: 0, lantern: false},
+		noSea: true,
+		noBoat: true,
+		camp: true,
+		stageBase: [0, 0],
+		village: false,
+		charLight: 0.92,
+		charWarm: 'rgba(255,140,60,0.1)',
+	},
 	storm_night: {
 		sky: {top: '#05070f', mid: '#16203a', bottom: '#0b1224', sun: [0.2, 0.4, -0.9], sunColor: '#3a4a78', sunSize: 12, stars: false},
 		fog: {color: '#0f182c', density: 0.0095},
@@ -316,9 +340,15 @@ export const Bolt: React.FC<{t: number}> = ({t}) => {
 };
 
 // ---------------------------------------------------------------- terrain (hills around the lake, or a shore)
-export const groundY = (x: number, z: number) => heightFn('shore')(x, z);
+export const groundY = (x: number, z: number, kind: 'shore' | 'camp' = 'shore') => heightFn(kind)(x, z);
 
-const heightFn = (kind: 'ring' | 'shore') => (x: number, z: number): number => {
+export const heightFn = (kind: 'ring' | 'shore' | 'camp') => (x: number, z: number): number => {
+	if (kind === 'camp') {
+		const r = Math.hypot(x, z);
+		const rolling = fbm(x * 0.05, z * 0.05) * 0.5;
+		const up = smooth(clamp((r - 38) / 70));
+		return rolling * (1 - up) + up * (10 + fbm(x * 0.014 + 5, z * 0.014) * 46);
+	}
 	if (kind === 'ring') {
 		const r = Math.hypot(x, z);
 		const up = smooth(clamp((r - 150) / 130));
@@ -332,7 +362,12 @@ const heightFn = (kind: 'ring' | 'shore') => (x: number, z: number): number => {
 	return -6 + 9 * smooth(clamp((z - 2) / 14)) + land + hills + far;
 };
 
-const terrainColor = (h: number, n: number, kind: 'ring' | 'shore'): THREE.Color => {
+const terrainColor = (h: number, n: number, kind: 'ring' | 'shore' | 'camp'): THREE.Color => {
+	if (kind === 'camp') {
+		if (h < 1.1 && n > 0.42) return col(n > 0.62 ? '#6a5a44' : '#594a38');
+		if (h < 6) return col(n > 0.5 ? '#3c4a2c' : '#33401f');
+		return col(n > 0.5 ? '#2c3a2c' : '#243126');
+	}
 	if (kind === 'shore') {
 		if (h < 0.6) return col(n > 0.5 ? '#c9b283' : '#b8a272');
 		if (h < 4) return col(n > 0.5 ? '#7d9b46' : '#6c8a3c');
@@ -633,6 +668,132 @@ export const Boat: React.FC<{cfg: SceneCfg; t: number}> = ({cfg, t}) => {
 					<pointLight color="#ffb347" intensity={26} distance={22} decay={1.6} />
 				</group>
 			) : null}
+		</group>
+	);
+};
+
+// ---------------------------------------------------------------- night camp props: fire, torches, tents, crates, grass
+const Flame: React.FC<{t: number; seed: number; size?: number}> = ({t, seed, size = 1}) => (
+	<group scale={size}>
+		{[0, 1, 2].map((i) => {
+			const f = 1 + 0.28 * Math.sin(t * (15 + i * 3) + seed * 2 + i) + 0.12 * Math.sin(t * 31 + i);
+			return (
+				<mesh key={i} position={[(i - 1) * 0.1 * Math.sin(t * 7 + i), 0.28 * f, (i - 1) * 0.07]} scale={[1 - i * 0.18, f, 1 - i * 0.18]}>
+					<coneGeometry args={[0.2 - i * 0.04, 0.7 - i * 0.1, 8]} />
+					<meshBasicMaterial color={['#ff6a1a', '#ffa530', '#ffe08a'][i]} transparent opacity={0.92 - i * 0.05} fog={false} />
+				</mesh>
+			);
+		})}
+	</group>
+);
+
+export const Campfire: React.FC<{t: number; pos: V3}> = ({t, pos}) => {
+	const logMap = useMemo(() => woodTex([88, 58, 32], 3, 12, [1, 2]), []);
+	const flick = 1 + 0.18 * Math.sin(t * 19) + 0.1 * Math.sin(t * 33);
+	return (
+		<group position={pos}>
+			{Array.from({length: 9}, (_, i) => {
+				const a = (i / 9) * Math.PI * 2;
+				return (
+					<mesh key={i} position={[Math.cos(a) * 0.75, 0.12, Math.sin(a) * 0.75]} scale={[1, 0.7, 1]}>
+						<icosahedronGeometry args={[0.2 + (i % 3) * 0.03, 0]} />
+						<meshStandardMaterial color="#5f5a55" roughness={1} flatShading />
+					</mesh>
+				);
+			})}
+			{[0, 1, 2, 3].map((i) => (
+				<mesh key={i} position={[0, 0.18, 0]} rotation={[Math.PI / 2 - 0.25, (i * Math.PI) / 4, 0]}>
+					<cylinderGeometry args={[0.09, 0.09, 1.1, 8]} />
+					<meshStandardMaterial map={logMap} roughness={0.9} emissive="#401000" emissiveIntensity={0.5} />
+				</mesh>
+			))}
+			<Flame t={t} seed={1} size={1.5} />
+			<pointLight position={[0, 1.2, 0]} color="#ff9a40" intensity={46 * flick} distance={26} decay={1.5} />
+			{Array.from({length: 7}, (_, i) => {
+				const k = ((t * 0.35 + i / 7) % 1);
+				return (
+					<mesh key={i} position={[Math.sin(i * 2.1 + t * 0.5) * 0.4 * k, 1 + k * 5.5, Math.cos(i * 1.7) * 0.3 * k]} scale={0.35 + k * 1.2}>
+						<sphereGeometry args={[0.5, 8, 6]} />
+						<meshBasicMaterial color="#8d93a6" transparent opacity={0.22 * (1 - k)} depthWrite={false} />
+					</mesh>
+				);
+			})}
+		</group>
+	);
+};
+
+const Torch: React.FC<{t: number; pos: V3; seed: number}> = ({t, pos, seed}) => (
+	<group position={pos}>
+		<mesh position={[0, 1.4, 0]}>
+			<cylinderGeometry args={[0.05, 0.07, 2.8, 8]} />
+			<meshStandardMaterial color="#4a3320" roughness={1} />
+		</mesh>
+		<group position={[0, 2.9, 0]}>
+			<Flame t={t} seed={seed} size={0.8} />
+			<pointLight color="#ff9a40" intensity={14 * (1 + 0.2 * Math.sin(t * 17 + seed))} distance={12} decay={1.6} />
+		</group>
+	</group>
+);
+
+const Tent: React.FC<{pos: V3; rot: number; s: number}> = ({pos, rot, s}) => {
+	const cloth = useMemo(clothTex, []);
+	const f = heightFn('camp');
+	return (
+		<group position={[pos[0], f(pos[0], pos[2]), pos[2]]} rotation={[0, rot, 0]} scale={s}>
+			<mesh position={[0, 1.35, 0]} rotation={[0, Math.PI / 4, 0]}>
+				<coneGeometry args={[2.9, 2.7, 4]} />
+				<meshStandardMaterial map={cloth} roughness={1} />
+			</mesh>
+			<mesh position={[0, 0.9, 2.05]} rotation={[0.3, 0, 0]}>
+				<planeGeometry args={[0.9, 1.7]} />
+				<meshStandardMaterial color="#1b1612" side={THREE.DoubleSide} />
+			</mesh>
+		</group>
+	);
+};
+
+export const CampProps: React.FC<{t: number}> = ({t}) => {
+	const crateMap = useMemo(() => woodTex([150, 108, 62], 4, 21, [1, 1]), []);
+	const grass = useMemo(() => {
+		const r = rng(31);
+		return Array.from({length: 900}, () => {
+			const a = r() * Math.PI * 2;
+			const d = 3 + r() * 46;
+			return {x: Math.cos(a) * d, z: Math.sin(a) * d - 2, h: 0.14 + r() * 0.22, ry: r() * 3};
+		});
+	}, []);
+	const f = heightFn('camp');
+	return (
+		<group>
+			<Campfire t={t} pos={[3.4, 0, -1.8]} />
+			<Torch t={t} pos={[-4.2, f(-4.2, -5), -5]} seed={1} />
+			<Torch t={t} pos={[7.5, f(7.5, -7), -7]} seed={2} />
+			<Tent pos={[-9, 0, -11]} rot={0.4} s={1.3} />
+			<Tent pos={[10, 0, -15]} rot={-0.5} s={1.5} />
+			<Tent pos={[-17, 0, -24]} rot={0.1} s={1.7} />
+			<Tent pos={[20, 0, -8]} rot={-1.1} s={1.2} />
+			{[[-3.4, -2.2], [-3.9, -1.5], [-3.0, -1.3]].map(([x, z], i) => (
+				<mesh key={i} position={[x, 0.36, z]} rotation={[0, i, 0]}>
+					<boxGeometry args={[0.72, 0.72, 0.72]} />
+					<meshStandardMaterial map={crateMap} roughness={0.85} />
+				</mesh>
+			))}
+			<mesh position={[0.4, 0.42, -2.6]}>
+				<boxGeometry args={[3.1, 0.14, 0.7]} />
+				<meshStandardMaterial map={crateMap} roughness={0.85} />
+			</mesh>
+			{[-1.3, 1.3].map((x) => (
+				<mesh key={x} position={[0.4 + x, 0.2, -2.6]}>
+					<boxGeometry args={[0.14, 0.4, 0.6]} />
+					<meshStandardMaterial map={crateMap} roughness={0.85} />
+				</mesh>
+			))}
+			{grass.map((g, i) => (
+				<mesh key={i} position={[g.x, f(g.x, g.z) + g.h / 2, g.z]} rotation={[0, g.ry, 0]}>
+					<coneGeometry args={[0.035, g.h, 4]} />
+					<meshStandardMaterial color="#4a5a30" roughness={1} />
+				</mesh>
+			))}
 		</group>
 	);
 };
