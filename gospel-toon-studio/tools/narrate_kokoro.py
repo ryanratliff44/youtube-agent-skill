@@ -1,6 +1,6 @@
 """Narrator (free alternative): narration.txt -> narration.wav + narration_segments.json using Kokoro TTS.
 
-python tools/narrate_kokoro.py episodes/<slug> [--voice am_santa] [--speed 0.9] [--pitch 0.94] [--pause 0.55]
+python tools/narrate_kokoro.py episodes/<slug> [--voice am_liam] [--speed 1.05] [--pitch 1.0] [--pause 0.55] [--warmth]
 
 Voices to try: am_santa, bm_fable (British storyteller), bm_george, bm_lewis, am_michael, am_adam.
 American voices start with "a", British with "b". --pitch below 1 makes the voice deeper (pitch only, speed kept).
@@ -51,11 +51,11 @@ def shape(path_in: str, path_out: str, pitch: float, warmth: bool) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
-    ap.add_argument("--voice", default="am_santa")
-    ap.add_argument("--speed", type=float, default=0.9, help="Kokoro speaking speed (0.8-1.1)")
-    ap.add_argument("--pitch", type=float, default=0.94, help="below 1 = deeper (0.88-1.0)")
+    ap.add_argument("--voice", default="am_liam", help="channel voice; try am_puck, am_eric, bm_george, am_santa")
+    ap.add_argument("--speed", type=float, default=1.05, help="Kokoro speaking speed (0.8-1.1)")
+    ap.add_argument("--pitch", type=float, default=1.0, help="below 1 = deeper (0.88-1.0)")
     ap.add_argument("--pause", type=float, default=0.55, help="seconds of silence between beats")
-    ap.add_argument("--no-warmth", action="store_true")
+    ap.add_argument("--warmth", action="store_true", help="add low-end warmth (for deeper storyteller voices)")
     args = ap.parse_args()
 
     ep = episode_dir(args.episode)
@@ -70,7 +70,7 @@ def main() -> None:
         raw = os.path.join(tempfile.gettempdir(), f"kokoro_raw_{i:02d}.wav")
         sf.write(raw, synth(text, args.voice, args.speed), SR)
         final = str(parts / f"beat{i:02d}.wav")
-        shape(raw, final, args.pitch, not args.no_warmth)
+        shape(raw, final, args.pitch, args.warmth)
         wav, sr = sf.read(final, dtype="float32")
         if wav.ndim > 1:
             wav = wav.mean(axis=1)

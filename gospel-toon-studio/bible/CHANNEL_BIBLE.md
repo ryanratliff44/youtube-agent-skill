@@ -21,9 +21,15 @@ scripture, easy for all ages, and leave viewers wanting to read the passage them
 7. **End with the source.** Close each video with the reference so viewers can read it.
 
 ## Voice & tone
-Confident, friendly storyteller, present tense, short punchy sentences, ~170–180 words per minute, light humor from human reactions. Hook in the first 2 seconds
-with a question or a surprising detail ("He touched a man nobody would touch."). No clickbait that
-misrepresents scripture.
+**Gen Z storytime.** A fast, casual, attention-grabbing friend telling you the craziest story you've
+ever heard. Present tense, short punchy sentences, ~175-190 words per minute. Open with a hook in the
+first 2 seconds ("Bro. Professional fishermen thought they were about to die. And Jesus? Asleep.").
+Use everyday slang sparingly ("bro", "literally", "dude"), never slang that mocks anyone.
+- Humor comes from how the people react (panicking disciples, confused crowds), never from Jesus or God.
+- Scripture quotes stay word for word (KJV/WEB); the casual voice goes around them, not inside them.
+- Keep the hard parts (crucifixion, death) calm and respectful: drop the slang, slow down.
+- No clickbait that misrepresents scripture.
+- Default narrator voice: Kokoro `am_liam` (see tools/narrate_kokoro.py).
 
 ## Art style (from the owner's favorite references — see references/STYLE_NOTES.md)
 Simple "bean people" characters in front of rich, painterly, moodily lit backgrounds.
