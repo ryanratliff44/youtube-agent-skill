@@ -1,16 +1,18 @@
 ---
 description: Study a reference video and update the style notes the team follows
-argument-hint: <path or URL to a reference video>
+argument-hint: <path to the watch folder the owner ran, or a video file>
 ---
 
-Reference video: $ARGUMENTS
+Reference: $ARGUMENTS
 
-1. If it's a URL, download it into `bible/references/` with `yt-dlp` (personal reference use only).
-2. Run `python tools/study_reference.py <file>`. It extracts scene keyframes and a transcript.
-3. Look at the keyframes and read the transcript. Note: art style (line, shading, palette), shot
-   length and cut rhythm, camera moves, caption font/size/position/animation, narration voice and
-   pace (words per minute), hook pattern in the first 3 seconds, music style, ending/CTA.
-4. Update `bible/references/STYLE_NOTES.md` with what we should adopt, and adjust the style prompt
-   prefix in `bible/CHANNEL_BIBLE.md` if the art direction should change. Learn the style; never copy
-   another channel's characters, artwork, script or branding.
-5. Summarize for me what changed.
+The owner runs `python tools/watch_video.py <URL or file>` on their PC. It makes `report.md` plus
+`sheet_*.jpg` and `hook.jpg` frames. (Claude cannot download YouTube/TikTok itself from the cloud, and cannot
+hear audio, so these files are how Claude "watches" a video.)
+
+1. Read `report.md` and look at every picture (hook.jpg first, then the sheets).
+2. Note: art style, shot length and cut rhythm (from the report), camera moves and zooms, caption font/size/
+   position/animation, narration pace (words per minute), the hook in the first 3 seconds, music (loudness
+   dips), and how it ends.
+3. Update `bible/references/STYLE_NOTES.md`, and adjust `bible/CHANNEL_BIBLE.md` where the art or pacing should
+   change. Learn the style; never copy another channel's characters, artwork, script or branding.
+4. Summarize for the owner what changed.

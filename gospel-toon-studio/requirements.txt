@@ -9,3 +9,5 @@ faster-whisper
 tiktok-uploader
 google-api-python-client
 google-auth-oauthlib
+# Watch-video tool (download reference videos)
+yt-dlp

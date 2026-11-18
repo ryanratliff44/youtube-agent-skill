@@ -55,3 +55,11 @@ python tools/build_timeline.py episodes/<slug>
 python tools/render.py    episodes/<slug>
 python tools/publish.py   episodes/<slug>             # dry run; add --publish to post
 ```
+
+## Studying a reference video ("watch" a video)
+```bash
+python tools/watch_video.py "https://youtube.com/shorts/XXXX"      # or a TikTok/Instagram link, or a local .mp4
+python tools/watch_video.py "<link>" --browser chrome              # if the site says "confirm you're not a bot"
+```
+It writes `bible/references/watch/<name>/` with `report.md` (cuts, shot length, words per minute, hook,
+transcript, loudness) and picture sheets with timestamps. Paste the report and attach the pictures to Claude.
