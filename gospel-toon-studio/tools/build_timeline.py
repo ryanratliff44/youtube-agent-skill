@@ -137,7 +137,14 @@ def anchored_timeline(ep, shots: list[dict], seg: dict, caps: list[dict], meta: 
     """Shots are pinned to the narration: each shot has "at": the first words of the sentence where it begins.
     A shot lasts until the next one begins. No automatic cuts: the camera moves inside a shot, and the picture
     only changes when the story does."""
-    words = [(norm_word(c["text"]), c["start"], c["end"]) for c in caps]
+    if not caps:
+        raise SystemExit("No captions yet. Run this first, in the main environment (.venv):\n  python tools/captions.py " + str(ep.name if hasattr(ep, "name") else ep))
+    # captions may hold 1-3 words each: split them back into single words for matching
+    split = []
+    for c in caps:
+        ws = c.get("words") or [{"word": c["text"], "start": c["start"], "end": c["end"]}]
+        split += [(norm_word(w["word"]), w["start"], w["end"]) for w in ws]
+    words = split
     toks = [w[0] for w in words]
     pos, starts = 0, []
     for i, s in enumerate(shots):

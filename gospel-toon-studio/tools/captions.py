@@ -13,7 +13,10 @@ from common import episode_dir, write_json
 
 
 def transcribe_words(path: str, model_name: str, device: str) -> list[dict]:
-    from faster_whisper import WhisperModel
+    try:
+        from faster_whisper import WhisperModel
+    except ModuleNotFoundError:
+        raise SystemExit("Captions need the main environment. Run:  deactivate   then   .venv\\Scripts\\Activate.ps1   and try again.")
 
     compute = "float16" if device == "cuda" else "int8"
     model = WhisperModel(model_name, device=device, compute_type=compute)
