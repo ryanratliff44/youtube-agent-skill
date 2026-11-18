@@ -88,3 +88,30 @@ Recommendation given: make the first David and Goliath background (`s01`) both w
 3. A 10-second preview with voice, characters and captions. Approve.
 4. Full video, then set up posting accounts and publish.
 5. Later: music bed, more characters/places, a batch queue for many videos.
+
+## Unreal Engine (owner chose Unreal for the backgrounds)
+- Unreal Engine 5.8 installed. Project `GospelToon` (open-world landscape template), level saved as `Valley`.
+  Plugins enabled: Movie Render Queue, Python Editor Script Plugin.
+- Plan: Unreal renders each shot's background as a short 9:16 clip; save it as
+  `episodes/<slug>/broll/<shot id>.mp4` and the studio adds characters, voice and captions on top
+  (`build_timeline.py` prefers an .mp4 over a .png and slows a short clip to fit the shot).
+- Script `unreal/valley_setup.py`: golden dawn sun, volumetric haze, sky light, steady exposure/grade, and a 9:16
+  CineCamera on the ground at head height that the view pilots. Not yet confirmed to run on 5.8.
+- The owner finds Unreal's interface hard. Do as much as possible from scripts.
+
+## Driving the open Unreal editor from a Claude Code session on the owner's PC
+1. In Unreal: Edit > Project Settings, search "remote execution", tick **Enable Remote Execution** (Python plugin).
+2. Unreal ships a client for it: `<UE install>/Engine/Plugins/Experimental/PythonScriptPlugin/Content/Python/remote_execution.py`
+   (UE install is usually `C:/Program Files/Epic Games/UE_5.8`). From PowerShell with Python 3.11:
+   ```python
+   import sys; sys.path.append(r"C:/Program Files/Epic Games/UE_5.8/Engine/Plugins/Experimental/PythonScriptPlugin/Content/Python")
+   import remote_execution as re, time
+   r = re.RemoteExecution(); r.start(); time.sleep(2)
+   node = r.remote_nodes[0]["node_id"]; r.open_command_connection(node)
+   print(r.run_command('exec(open(r"C:/Users/immar/youtube-agent-skill/gospel-toon-studio/unreal/valley_setup.py").read())', exec_mode="ExecuteFile"))
+   r.stop()
+   ```
+   (Check the exact API in that file; it may differ by version.)
+3. To see the result without asking the owner for photos, have Unreal save a screenshot
+   (`unreal.AutomationLibrary.take_high_res_screenshot(1080, 1920, "check.png")` or the console command `HighResShot 1`)
+   and read the image file it writes under `GospelToon/Saved/Screenshots/`.
