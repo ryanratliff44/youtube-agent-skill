@@ -180,8 +180,9 @@ void main(){
   vec2 p = vW.xz; float t = uTime; vec2 g = vec2(0.0);
   ${WAVES_GRAD_GLSL}
   // fine ripples (the big waves are in the mesh; these make the surface look wet and real)
-  float rip = 0.05 + 0.1 * min(uAmp, 1.0);
-  g += rip * vec2(cos(p.x * 2.7 + p.y * 1.9 + t * 2.1) * 2.7 + cos(p.x * 5.3 - p.y * 4.1 + t * 3.0) * 5.3, cos(p.x * 2.7 + p.y * 1.9 + t * 2.1) * 1.9 - cos(p.x * 5.3 - p.y * 4.1 + t * 3.0) * 4.1) * 0.16;
+  float rip = 0.03 + 0.06 * min(uAmp, 1.0);
+  float r1 = p.x * 1.7 + p.y * 2.9 + t * 1.3, r2 = p.x * 3.7 - p.y * 1.3 + t * 1.9, r3 = p.x * 0.9 - p.y * 4.3 + t * 1.1;
+  g += rip * vec2(cos(r1) * 1.7 + cos(r2) * 3.7 + cos(r3) * 0.9, cos(r1) * 2.9 - cos(r2) * 1.3 - cos(r3) * 4.3) * 0.12;
   vec3 n = normalize(vec3(-g.x, 1.0, -g.y));
   vec3 V = normalize(cameraPosition - vW);
   float fr = pow(1.0 - max(dot(n, V), 0.0), 4.0);
@@ -191,7 +192,7 @@ void main(){
   vec3 refl = mix(uSky, uSunCol, 0.15);
   vec3 c = mix(base, refl, 0.12 + 0.75 * fr);
   vec3 R = reflect(-normalize(uSun), n); float spec = pow(max(dot(R, V), 0.0), 420.0);
-  c += uSunCol * (spec * 0.9 + pow(max(dot(R, V), 0.0), 18.0) * 0.05);
+  c += uSunCol * (spec * 0.55 + pow(max(dot(R, V), 0.0), 18.0) * 0.03);
   float crest = smoothstep(uFoamH, uFoamH + 0.35, vH);
   float streak = 0.5 + 0.5 * sin(p.x * 3.1 + p.y * 2.3 + t);
   c = mix(c, uFoam, crest * (0.65 + 0.35 * streak));

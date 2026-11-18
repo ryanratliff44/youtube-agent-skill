@@ -216,20 +216,20 @@ const WorldShot: React.FC<{shot: Shot; frames: number; lead: number; from: numbe
 	const blur = 0;
 	const chars: Placed[] = acts.map((o) => {
 		const cap = captions.find((c) => t >= c.start && t < c.end);
+		const last = [...captions].reverse().find((c) => c.start <= t);
+		const wordIdx = last ? captions.indexOf(last) : 0;
+		const wordAge = last ? t - last.start : 9;
 		const speaking = Boolean(o.a.speak && cap && o.a.emotion !== 'sleep');
+		const other = acts.find((q) => q.i !== o.i);
+		const lookYaw = other ? Math.max(-0.7, Math.min(0.7, (other.world[0] - o.world[0]) * 0.35)) : 0;
 		const mouth = speaking ? 0.3 + 0.7 * Math.abs(Math.sin(t * 2 * Math.PI * 3.6 + o.i)) : 0;
 		// Face the camera (mostly), so close-ups show faces; a little sway keeps them alive.
 		const yaw = Math.atan2(cam.pos[0] - o.world[0], cam.pos[2] - o.world[2]) * 0.95 + 0.06 * Math.sin(t * 0.9 + o.i * 2);
-		return {key: String(o.i), pos: o.world, yaw, char: o.a.char, emotion: o.a.emotion, t, mouth, walk: o.walk, speaking, phase: o.i * 0.37, glow: o.a.glow, scale: o.a.scale ?? 1};
+		return {key: String(o.i), pos: o.world, yaw, char: o.a.char, emotion: o.a.emotion, t, mouth, walk: o.walk, speaking, phase: o.i * 0.37, wordAge, wordIdx, lookYaw, glow: o.a.glow, scale: o.a.scale ?? 1};
 	});
 	return (
 		<AbsoluteFill style={{opacity: fade, backgroundColor: '#000', overflow: 'hidden', filter: blur > 0.3 ? `blur(${blur}px)` : undefined}}>
 			<World scene={scene} t={t} cam={cam} W={W} H={H} chars={chars} />
-			{shot.text ? (
-				<div style={{position: 'absolute', top: 150, width: '100%', textAlign: 'center'}}>
-					<span style={{fontFamily: SERIF, fontSize: 46, color: PARCHMENT, background: 'rgba(59,42,26,0.72)', padding: '12px 28px', borderRadius: 14}}>{shot.text}</span>
-				</div>
-			) : null}
 		</AbsoluteFill>
 	);
 };
@@ -321,14 +321,7 @@ export const Episode: React.FC<Timeline> = (t) => {
 				);
 			})}
 			<Sequence from={f(t.outro.start)} name="outro">
-				{t.shots.some((x) => x.world) ? (
-					<AbsoluteFill style={{alignItems: 'center'}}>
-						<div style={{position: 'absolute', top: 170, textAlign: 'center', fontFamily: SERIF, color: PARCHMENT, background: 'rgba(59,42,26,0.78)', padding: '20px 36px', borderRadius: 18}}>
-							<div style={{fontSize: 56, whiteSpace: 'pre-line'}}>{t.outro.references.join('\n') || t.title}</div>
-							<div style={{fontSize: 34, color: '#e2b95c', fontStyle: 'italic', marginTop: 8}}>Read it for yourself</div>
-						</div>
-					</AbsoluteFill>
-				) : (
+				{t.shots.some((x) => x.world) ? null : (
 					<Card title={t.outro.references.join('\n') || t.title} subtitle="Read it for yourself" />
 				)}
 			</Sequence>
