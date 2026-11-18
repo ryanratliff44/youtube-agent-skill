@@ -51,7 +51,7 @@ Simple "bean people" characters in front of rich, painterly, moodily lit backgro
 > 9:16 composition
 
 **Background negative prompt:**
-> people, characters, faces, figures, text, watermark, logo, subtitles, modern buildings, cars, phones,
+> floating boat, levitating objects, flying boat, boat in the air, people, characters, faces, figures, text, watermark, logo, subtitles, modern buildings, cars, phones,
 > blurry, low quality, ugly
 
 - Aspect: 9:16 (1080×1920) for shorts.
@@ -65,3 +65,10 @@ Simple "bean people" characters in front of rich, painterly, moodily lit backgro
 Character sheets live in `bible/characters/<id>.md`. Each has a fixed **prompt token** that the
 B-roll artist pastes verbatim so the character looks the same in every shot. Add new characters
 there before using them.
+
+## Background lessons (what works / what failed)
+- **Works best:** atmospheric scenes dominated by water, sky and light (e.g. "calm glassy lake under clearing
+  clouds, bright stars, moonlight on the water" made the best picture of the first episode).
+- **Fails:** objects "beside" or "next to" a thing (a boat "beside the shore" floated in the air). Say where an
+  object *rests*: "hull resting in the shallow water at the shore".
+- Keep one main subject per background and describe the light and the weather first.

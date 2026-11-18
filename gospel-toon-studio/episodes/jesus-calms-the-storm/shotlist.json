@@ -43,11 +43,11 @@
       "id": "s02",
       "beat": 1,
       "characters": [],
-      "background": "Sea of Galilee at sunset, calm golden water, green hills on the far shore, wooden fishing boat on a pebble beach",
+      "background": "Sea of Galilee at sunset, calm golden water, green hills on the far shore, a wooden fishing boat sitting low in the shallow water at the shore with its hull resting in the water, wet pebble beach in the foreground",
       "actors": [],
       "mood": "dusk",
       "camera": "pan right",
-      "prompt": "Sea of Galilee at sunset, calm golden water, green hills on the far shore, wooden fishing boat on a pebble beach",
+      "prompt": "Sea of Galilee at sunset, calm golden water, green hills on the far shore, a wooden fishing boat sitting low in the shallow water at the shore with its hull resting in the water, wet pebble beach in the foreground",
       "onscreen_text": "Mark 4:35-41"
     },
     {
@@ -58,7 +58,7 @@
         "peter",
         "john"
       ],
-      "background": "pebble beach shore at dusk beside a small wooden fishing boat with a rope, warm orange sky",
+      "background": "empty pebble beach at dusk at the edge of a calm lake, a wooden fishing boat sitting low in the shallow water with its hull resting in the water and touching the shore, a rope lying on the wet pebbles, warm orange sky",
       "actors": [
         {
           "char": "jesus",
@@ -78,7 +78,7 @@
       ],
       "mood": "dusk",
       "camera": "pulse",
-      "prompt": "pebble beach shore at dusk beside a small wooden fishing boat with a rope, warm orange sky"
+      "prompt": "empty pebble beach at dusk at the edge of a calm lake, a wooden fishing boat sitting low in the shallow water with its hull resting in the water and touching the shore, a rope lying on the wet pebbles, warm orange sky"
     },
     {
       "id": "s04",
