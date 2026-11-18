@@ -212,14 +212,14 @@ const WorldShot: React.FC<{shot: Shot; frames: number; lead: number; from: numbe
 		const c = acts.map((o) => chest(o.world));
 		subject = [c.reduce((s, v) => s + v[0], 0) / c.length, c.reduce((s, v) => s + v[1], 0) / c.length, c.reduce((s, v) => s + v[2], 0) / c.length];
 	} else subject = stageToWorld(scene, [0, 1.4, 0], t);
-	const cam = cameraFor(shot.cam ?? 'wide', subject, k, t, scene === 'storm_night' ? 0.8 : 0.35);
+	const cam = cameraFor(shot.cam ?? 'wide', subject, k, t, scene === 'storm_night' ? 0.8 : 0.35, Boolean(cfg.camFlip));
 	const blur = 0;
 	const chars: Placed[] = acts.map((o) => {
 		const cap = captions.find((c) => t >= c.start && t < c.end);
 		const speaking = Boolean(o.a.speak && cap && o.a.emotion !== 'sleep');
 		const mouth = speaking ? 0.3 + 0.7 * Math.abs(Math.sin(t * 2 * Math.PI * 3.6 + o.i)) : 0;
 		// Face the camera (mostly), so close-ups show faces; a little sway keeps them alive.
-		const yaw = Math.atan2(cam.pos[0] - o.world[0], cam.pos[2] - o.world[2]) * 0.85 + 0.12 * Math.sin(t * 0.9 + o.i * 2);
+		const yaw = Math.atan2(cam.pos[0] - o.world[0], cam.pos[2] - o.world[2]) * 0.95 + 0.06 * Math.sin(t * 0.9 + o.i * 2);
 		return {key: String(o.i), pos: o.world, yaw, char: o.a.char, emotion: o.a.emotion, t, mouth, walk: o.walk, speaking, phase: o.i * 0.37, glow: o.a.glow, scale: o.a.scale ?? 1};
 	});
 	return (

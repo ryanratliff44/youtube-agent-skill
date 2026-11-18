@@ -51,7 +51,7 @@ export const World: React.FC<{scene: string; t: number; cam: Cam; W: number; H: 
 			<fogExp2 attach="fog" args={[cfg.fog.color, cfg.fog.density]} />
 			<ambientLight color={cfg.ambient.color} intensity={cfg.ambient.intensity + flash * 2.4} />
 			<directionalLight color={cfg.key.color} intensity={cfg.key.intensity + flash * 2.2} position={cfg.key.dir.map((v) => v * 80) as V3} />
-			<Sky cfg={cfg} at={cam.pos} flash={flash} />
+			<Sky cfg={cfg} at={cam.pos} flash={flash} t={t} />
 			{cfg.sky.stars ? <Stars at={cam.pos} /> : null}
 			<Sea cfg={cfg} t={t} flash={flash} at={cam.pos} />
 			<Terrain cfg={cfg} />
@@ -59,10 +59,9 @@ export const World: React.FC<{scene: string; t: number; cam: Cam; W: number; H: 
 			<Boat cfg={cfg} t={t} />
 			{chars.map(({key, pos, yaw, ...p}) => (
 				<group key={key} position={pos} rotation={onBoat ? new THREE.Euler(pose.roll * 0.8, yaw, pose.pitch * 0.8, 'YZX') : new THREE.Euler(0, yaw, 0)}>
-					<Char3D {...p} />
+					<Char3D {...p} light={Math.min(1.25, cfg.charLight * (1 + flash * 0.7))} />
 				</group>
 			))}
-			{cfg.clouds > 0 ? <Clouds cfg={cfg} t={t} flash={flash} at={cam.pos} /> : null}
 			{cfg.rain ? <Rain t={t} at={cam.pos} /> : null}
 			{cfg.lightning ? <Bolt t={t} /> : null}
 		</ThreeCanvas>

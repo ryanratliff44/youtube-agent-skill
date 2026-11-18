@@ -130,3 +130,6 @@ export const noise2 = (x: number, z: number) => {
 	return lerp(lerp(a, b, xf), lerp(c, d, xf), zf);
 };
 export const fbm = (x: number, z: number) => noise2(x, z) * 0.55 + noise2(x * 2.1, z * 2.1) * 0.28 + noise2(x * 4.3, z * 4.3) * 0.17;
+
+/** GLSL that adds the analytic slope of the same waves (plus small ripples) to `g` for smooth, realistic water normals. */
+export const WAVES_GRAD_GLSL = WAVES.map(([dx, dz, k, w, a]) => `g += ${(a * k).toFixed(4)} * vec2(${dx.toFixed(4)}, ${dz.toFixed(4)}) * cos(${k.toFixed(3)} * (${dx.toFixed(4)} * p.x + ${dz.toFixed(4)} * p.y) + ${w.toFixed(3)} * t) * uAmp;`).join('\n');

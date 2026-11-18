@@ -112,3 +112,14 @@ We learn the *style*. We never copy Ricks Clips' characters, backgrounds or scri
 ## Studio changes from this clip
 - New scenes now dissolve in (0.2 s); angle changes stay hard cuts. (editor)
 - Next: mouth-flap talking animation, a no-character "explainer" scene type, and a music bed.
+
+## KEY STYLE RULE (from "Why Samurai Feared The Flying Thunder", 30 s)
+**Fake, flat characters in a realistic world.** The characters are deliberately NOT realistic and NOT shaded:
+- Pure white (never skin-colored) round faces; thick black outline; black dot eyes with heavy half-closed lids
+  and thick brows; tiny mouth; no cheeks/blush/sparkles.
+- Thin black stick arms and legs, tiny black hands. A flat-colored bean body with a few clothing details.
+- Flat, unlit look; they are dimmed to match the light of the scene, nothing more.
+Everything around them is realistic: real materials (wood grain, cloth, stone), real water and sky, volumetric
+clouds, a moon, fire and smoke, interiors with props and rugs. The contrast is the style.
+- Many characters in one shot (3-4 seated around a fire), each with its own expression.
+- Camera: wide establishing shot, a drone-like fly-over, then medium shots of the speaker; close-ups for punchlines.
