@@ -50,6 +50,7 @@ export type Shot = {
 	cam?: string; // 3D camera move: wide, push_in, close, orbit, low_hero, crane_up, pull_back, whip, over_water, dutch, reveal
 	subject?: V3; // 3D: stage point the camera looks at (default: the actors)
 	focusActor?: number; // 3D: index of the actor the camera looks at
+	clipDur?: number | null; // length of a background video clip; slowed down if the shot is longer
 };
 
 export type Timeline = {
@@ -263,7 +264,7 @@ const Moving: React.FC<{shot: Shot; frames: number; lead: number; from: number; 
 				{shot.type === 'scene' && !shot.src ? (
 					<AbsoluteFill style={{background: 'linear-gradient(180deg, #7fb6e6 0%, #cfe3f3 55%, #8fae6a 56%, #5f7f45 100%)'}} />
 				) : shot.type === 'video' && shot.src ? (
-					<OffthreadVideo src={staticFile(shot.src)} muted style={media} />
+					<OffthreadVideo src={staticFile(shot.src)} muted style={media} playbackRate={shot.clipDur ? Math.min(1, Math.max(0.25, shot.clipDur / Math.max(0.1, (frames - 1) / 30))) : 1} />
 				) : (shot.type === 'image' || shot.type === 'scene') && shot.src ? (
 					<Img src={staticFile(shot.src)} style={media} />
 				) : (

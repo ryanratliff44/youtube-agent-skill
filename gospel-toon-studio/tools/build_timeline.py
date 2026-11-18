@@ -174,11 +174,23 @@ def anchored_timeline(ep, shots: list[dict], seg: dict, caps: list[dict], meta: 
                 actors.append(ac)
                 if a["char"] == (s.get("focus") or (s["actors"][0]["char"])) and focus_pt is None:
                     focus_pt = {"x": ac["x"], "y": max(0.05, ac["y"] - 0.4583 * ac["scale"] * BIG.get(a["char"], 1) * 0.83), "s": 1}
-            src = f"broll/{s['id']}.png" if (ep / "broll" / f"{s['id']}.png").exists() else None
+            # an Unreal (or any) video clip wins over a still picture
+            clip = ep / "broll" / f"{s['id']}.mp4"
+            src, kind, clip_dur = None, "scene", None
+            if clip.exists():
+                src, kind = f"broll/{s['id']}.mp4", "video"
+                try:
+                    import subprocess
+                    clip_dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(clip)],
+                                                    capture_output=True, text=True).stdout.strip())
+                except Exception:
+                    clip_dur = None
+            elif (ep / "broll" / f"{s['id']}.png").exists():
+                src = f"broll/{s['id']}.png"
             motion = "punch" if i == 0 else PLATE_CAM.get(s.get("cam", "hold"), "drift")
-            timeline.append({"id": s["id"], "src": src, "type": "scene", "start": starts[i], "end": starts[i + 1] if i + 1 < len(shots) else total,
+            timeline.append({"id": s["id"], "src": src, "type": kind, "clipDur": clip_dur, "start": starts[i], "end": starts[i + 1] if i + 1 < len(shots) else total,
                              "motion": motion, "text": "", "actors": actors, "mood": s.get("mood"), "focus": focus_pt, "cont": False})
-            print(f"  {s['id']:>5} starts {starts[i]:6.2f}s  {'picture' if src else 'PLACEHOLDER':<11} {motion:<9} \"{s['at']}\"")
+            print(f"  {s['id']:>5} starts {starts[i]:6.2f}s  {('UNREAL CLIP' if kind == 'video' else 'picture') if src else 'PLACEHOLDER':<11} {motion:<9} \"{s['at']}\"")
             continue
         actors = build_actors(s)
         world = s.get("world", "storm_night")
