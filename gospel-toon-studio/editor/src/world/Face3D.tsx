@@ -151,19 +151,13 @@ export const Face: React.FC<FaceProps> = ({emotion: e, blink, open, look, pulse,
 		case 'fear':
 			eyes = sides.map((s) => eyeDot(s, 0.04, 0.04));
 			brows = sides.map((s) => <Stroke key={s} pts={brow(s, -0.015, 0.05, 0.0, 0.15 + lift)} />);
-			mouth = talk ? talking(0.045, 0.02, -0.18) : <Stroke pts={[[-0.075, -0.19], [-0.04, -0.175], [0, -0.195], [0.04, -0.175], [0.075, -0.19]]} />;
-			extra = <Drop x={0.3} y={0.12 - ((t * 0.07) % 0.1)} />;
+			mouth = talk ? talking(0.045, 0.02, -0.18) : <Stroke pts={[[-0.07, -0.19], [-0.03, -0.178], [0.03, -0.178], [0.07, -0.19]]} />;
 			break;
 		case 'panic':
 			eyes = sides.map((s) => <Ring key={s} x={ex(s, 0)} y={0.06} r={0.068} pupil={0.017} px={look * 0.012} />);
 			brows = sides.map((s) => <Stroke key={s} pts={brow(s, 0.01, 0.065, 0.0, 0.17 + lift)} />);
 			mouth = talking(0.06, 0.05 + 0.02 * Math.abs(Math.sin(t * 16)), -0.18);
-			extra = (
-				<>
-					<Drop x={0.31} y={0.14 - ((t * 0.09) % 0.12)} />
-					<Drop x={-0.33} y={0.08 - ((t * 0.08 + 0.05) % 0.1)} s={0.8} />
-				</>
-			);
+			extra = <Drop x={0.31} y={0.1} />;
 			break;
 		case 'anger':
 			eyes = sides.map((s) => eyeDot(s, 0.042, 0.035));
@@ -213,6 +207,16 @@ export const Face: React.FC<FaceProps> = ({emotion: e, blink, open, look, pulse,
 			));
 			brows = sides.map((s) => <Stroke key={s} pts={brow(s, 0.0, -0.005, 0.015, 0.14 + lift)} />);
 			mouth = talk ? talking(0.045, 0.018, -0.17) : <Stroke pts={[[-0.06, -0.17], [-0.02, -0.178], [0.02, -0.178], [0.06, -0.17]]} />;
+			break;
+		case 'warm':
+			eyes = sides.map((s) => (
+				<group key={s}>
+					{eyeDot(s, 0.043, 0.045)}
+					<Stroke pts={lid(s, 0, 0.045, 0.012)} r={0.016} />
+				</group>
+			));
+			brows = sides.map((s) => <Stroke key={s} pts={brow(s, 0.01, 0.0, 0.02, 0.15 + lift)} />);
+			mouth = talk ? talking(0.05, 0.02, -0.16) : <Stroke pts={[[-0.085, -0.13], [-0.045, -0.165], [0.045, -0.165], [0.085, -0.13]]} />;
 			break;
 		case 'sleep':
 			eyes = sides.map((s) => <Stroke key={s} pts={happyArc(s, false)} r={0.015} />);

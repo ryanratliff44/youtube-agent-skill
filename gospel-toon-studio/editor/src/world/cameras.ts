@@ -27,9 +27,10 @@ const rad = (d: number) => (d * Math.PI) / 180;
  * Camera for a shot: it flies from one framing to another around the subject (a point in the world).
  * k = 0..1 progress through the shot, t = absolute time (for the handheld drift).
  */
-export const cameraFor = (preset: string, subject: V3, k: number, t: number, shake = 1, flip = false): Cam => {
+export const cameraFor = (preset: string, subject: V3, k: number, t: number, shake = 1, flip = false, secs = 0): Cam => {
 	const P = PRESETS[(preset as CamPreset) in PRESETS ? (preset as CamPreset) : 'wide'];
-	const e = P.ease === 'out' ? easeOut(Math.min(1, k * 2.4)) : easeInOut(k);
+	// the opening zoom takes 0.8 s whatever the shot length, then the camera just holds with a slow drift
+	const e = preset === 'pivot' ? easeOut(Math.min(1, secs / 0.8)) : P.ease === 'out' ? easeOut(Math.min(1, k * 2.4)) : easeInOut(k);
 	const m = (i: number) => lerp(P.from[i], P.to[i], e);
 	const az = rad(m(0)) + (flip ? Math.PI : 0);
 	const el = rad(m(1));

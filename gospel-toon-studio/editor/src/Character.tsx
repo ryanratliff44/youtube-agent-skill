@@ -19,8 +19,8 @@ export type CharDef = {
 
 export const CHARS: Record<string, CharDef> = {
 	jesus: {skin: 'olive', robe: '#f3ead8', sash: '#3f6fb5', hair: '#5a3a22', style: 'long', beard: '#5a3a22'},
-	peter: {skin: 'tan', robe: '#9b6b3c', sash: '#6b4423', hair: '#2c1b12', style: 'curly', beard: '#2c1b12', beardBig: true},
-	john: {skin: 'olive', robe: '#d8c196', sash: '#8a6d3b', hair: '#4a3322', style: 'short'},
+	peter: {skin: 'tan', robe: '#6f8668', sash: '#4b3a28', hair: '#2c1b12', style: 'curly', beard: '#2c1b12', beardBig: true},
+	john: {skin: 'olive', robe: '#c4ad80', sash: '#7a6238', hair: '#4a3322', style: 'short'},
 	mary: {skin: 'olive', robe: '#f3ead8', style: 'veil', veil: '#3f6fb5'},
 	crowd: {skin: 'light', robe: '#7d8f5a', sash: '#5b6a3e', hair: '#6b4a2a', style: 'short'},
 };
@@ -46,13 +46,14 @@ export const EMOTIONS: Record<string, Emotion> = {
 	calm: {expr: 'calm', armL: 10, armR: 10, foreL: 4, foreR: 4, bob: 2, hop: 0, shake: 0, tilt: 1.5, lean: 0, flail: 0, rate: 0.6},
 	joy: {expr: 'smile', armL: 128, armR: 128, foreL: -20, foreR: -20, bob: 6, hop: 34, shake: 0, tilt: 5, lean: 2, flail: 22, rate: 2.2},
 	laugh: {expr: 'smile', armL: 28, armR: 28, foreL: 70, foreR: 70, bob: 8, hop: 20, shake: 3, tilt: 7, lean: -5, flail: 8, rate: 2.8, open: 0.75},
-	fear: {expr: 'worried', armL: 120, armR: 120, foreL: 20, foreR: 20, bob: 4, hop: 10, shake: 5, tilt: 3, lean: -6, flail: 30, rate: 3.4},
-	panic: {expr: 'worried', armL: 150, armR: 150, foreL: 10, foreR: 10, bob: 6, hop: 22, shake: 7, tilt: 4, lean: 4, flail: 45, rate: 4.2, open: 0.6},
+	fear: {expr: 'worried', armL: 40, armR: 40, foreL: 20, foreR: 20, bob: 4, hop: 0, shake: 0, tilt: 3, lean: -6, flail: 30, rate: 3.4},
+	panic: {expr: 'worried', armL: 55, armR: 55, foreL: 10, foreR: 10, bob: 6, hop: 0, shake: 0, tilt: 4, lean: 4, flail: 45, rate: 4.2, open: 0.6},
 	anger: {expr: 'angry', armL: 35, armR: 112, foreL: 50, foreR: 40, bob: 5, hop: 4, shake: 2.5, tilt: -3, lean: 9, flail: 12, rate: 3},
 	sad: {expr: 'sad', armL: 6, armR: 6, foreL: 4, foreR: 4, bob: 2, hop: 0, shake: 0.6, tilt: 9, lean: 6, flail: 0, rate: 0.5},
 	awe: {expr: 'surprised', armL: 58, armR: 58, foreL: 20, foreR: 20, bob: 3, hop: 3, shake: 0.8, tilt: -2, lean: -7, flail: 5, rate: 1.1},
 	sleep: {expr: 'asleep', armL: 8, armR: 8, foreL: 3, foreR: 3, bob: 3, hop: 0, shake: 0, tilt: 8, lean: 3, flail: 0, rate: 0.35},
 	smug: {expr: 'calm', armL: 14, armR: 62, foreL: 6, foreR: 88, bob: 2, hop: 0, shake: 0, tilt: -4, lean: -2, flail: 0, rate: 0.7},
+	warm: {expr: 'smile', armL: 10, armR: 14, foreL: 6, foreR: 8, bob: 2, hop: 0, shake: 0, tilt: 3, lean: 1, flail: 0, rate: 0.6},
 	command: {expr: 'calm', armL: 10, armR: 150, foreL: 5, foreR: -8, bob: 2, hop: 0, shake: 0, tilt: 0, lean: 2, flail: 0, rate: 0.6},
 };
 

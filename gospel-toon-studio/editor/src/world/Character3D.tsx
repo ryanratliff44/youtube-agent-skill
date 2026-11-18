@@ -66,7 +66,7 @@ const Stick: React.FC<{len: number; r: number}> = ({len, r}) => (
 	</mesh>
 );
 
-const PATTERN: Record<string, [string, string]> = {peter: ['stripes', '#6b4423'], john: ['dots', '#8a6d3b'], crowd: ['bands', '#566a3a'], mary: ['dots', '#b9c8e6']};
+const PATTERN: Record<string, [string, string]> = {}; // solid colors: patterns made the torso look like a barrel
 
 export type Char3DProps = {
 	char: string;
@@ -100,13 +100,13 @@ export const Char3D: React.FC<Char3DProps> = ({char, emotion, t, mouth, walk, sp
 	const shiftX = 0.035 * shift;
 	// knees stay bent a little and bounce with the beat (squash and stretch)
 	const bounceRate = E.rate * 0.5;
-	const bounce = E.hop > 4 ? Math.abs(Math.sin(tt * w * bounceRate)) : 0;
+	const bounce = emotion === 'joy' || emotion === 'laugh' ? 0.3 * Math.abs(Math.sin(tt * w * bounceRate)) : 0; // only happy people bounce, and only a little
 	const bend = (9 + 4 * Math.sin(tt * w * 0.5) + 10 * pulse * (speaking ? 1 : 0.3) + 18 * bounce + (emotion === 'sad' ? 8 : 0) + (emotion === 'anger' ? 6 : 0)) * D;
 	const drop = 0.8 * (1 - Math.cos(bend)) + (emotion === 'sad' ? 0.04 : 0);
 	const squash = 1 + 0.035 * Math.sin(tt * w * 0.8) - 0.05 * pulse * (speaking ? 1 : 0.3) - 0.06 * bounce + (E.hop > 4 ? 0.05 * (1 - bounce) : 0);
 	const stepA = walk > 0 ? 30 * Math.sin(tt * w * 1.9) : 0;
 	const hop = Math.abs(Math.sin(tt * w * 1.9)) * 0.055 * walk + (E.hop / 560) * 1.95 * 0.28 * bounce;
-	const jx = (E.shake / 300) * 0.35 * (Math.sin(tt * 38) + 0.6 * Math.sin(tt * 61));
+	const jx = 0;
 	// arms: relaxed with small elbow bends, plus one clear gesture on emphasized words
 	const rest = 11 + 3 * Math.sin(tt * w * 0.4);
 	const baseL = Math.min(60, 10 + (E.armL - 10) * 0.32);
@@ -149,22 +149,27 @@ export const Char3D: React.FC<Char3DProps> = ({char, emotion, t, mouth, walk, sp
 				})}
 				<group position={[0, -drop, 0]} rotation={[lean, 0, 0]} scale={[1 / Math.sqrt(squash), squash, 1 / Math.sqrt(squash)]}>
 				{/* flat colored bean body */}
-				<group position={[0, 1.12, 0]}>
-					<Part color={def.robe} outline={1.07} tex={PATTERN[char] ? patternTex(PATTERN[char][0], def.robe, PATTERN[char][1]) : undefined}>
-						<capsuleGeometry args={[0.27, 0.42, 6, 16]} />
+				<group position={[0, 1.2, 0]}>
+					<Part color={def.robe} outline={1.07}>
+						<capsuleGeometry args={[0.235, 0.3, 6, 16]} />
 					</Part>
-					{def.sash ? (
-						<Part pos={[0, -0.04, 0]} color={def.sash} outline={1.03}>
-							<cylinderGeometry args={[0.278, 0.278, 0.085, 18]} />
-						</Part>
-					) : null}
 				</group>
+				<group position={[0, 0.86, 0]}>
+					<Part color={def.robe} outline={1.06}>
+						<cylinderGeometry args={[0.25, 0.36, 0.5, 22]} />
+					</Part>
+				</group>
+				{def.sash ? (
+					<Part pos={[0, 1.02, 0]} color={def.sash} outline={1.04}>
+						<cylinderGeometry args={[0.262, 0.262, 0.08, 20]} />
+					</Part>
+				) : null}
 				{/* stick arms */}
 				{[
 					{s: -1, up: armL, fo: foreL},
 					{s: 1, up: armR, fo: foreR},
 				].map(({s: sd, up, fo}) => (
-					<group key={sd} position={[sd * 0.27, 1.34, 0.04]} rotation={[-0.15 - (sd === side ? emphasis * 0.35 : 0), 0, sd * up * D]}>
+					<group key={sd} position={[sd * 0.24, 1.36, 0.04]} rotation={[-0.15 - (sd === side ? emphasis * 0.35 : 0), 0, sd * up * D]}>
 						<Stick len={0.38} r={0.028} />
 						<group position={[0, -0.38, 0]} rotation={[-fo * D * 0.6, 0, sd * fo * D * 0.5]}>
 							<Stick len={0.36} r={0.028} />

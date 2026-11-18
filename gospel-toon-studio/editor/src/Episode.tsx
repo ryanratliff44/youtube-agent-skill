@@ -212,7 +212,7 @@ const WorldShot: React.FC<{shot: Shot; frames: number; lead: number; from: numbe
 		const c = acts.map((o) => chest(o.world));
 		subject = [c.reduce((s, v) => s + v[0], 0) / c.length, c.reduce((s, v) => s + v[1], 0) / c.length, c.reduce((s, v) => s + v[2], 0) / c.length];
 	} else subject = stageToWorld(scene, [0, 1.4, 0], t);
-	const cam = cameraFor(shot.cam ?? 'wide', subject, k, t, scene === 'storm_night' ? 0.8 : 0.35, Boolean(cfg.camFlip));
+	const cam = cameraFor(shot.cam ?? 'wide', subject, k, t, scene === 'storm_night' ? 0.8 : 0.35, Boolean(cfg.camFlip), local / fps);
 	const blur = 0;
 	const chars: Placed[] = acts.map((o) => {
 		const cap = captions.find((c) => t >= c.start && t < c.end);

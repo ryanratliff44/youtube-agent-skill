@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import itertools
+import re
 
 from common import episode_dir, read_json, write_json
 
@@ -48,7 +49,7 @@ def angles(actors: list[dict], n: int) -> list[dict | None]:
 
 EXPR_TO_EMOTION = {"neutral": "neutral", "calm": "calm", "smile": "joy", "worried": "fear", "surprised": "awe",
                    "asleep": "sleep", "angry": "anger", "sad": "sad"}
-EMOTIONS = ["neutral", "calm", "joy", "laugh", "fear", "panic", "anger", "sad", "awe", "sleep", "smug", "command"]
+EMOTIONS = ["neutral", "calm", "warm", "joy", "laugh", "fear", "panic", "anger", "sad", "awe", "sleep", "smug", "command"]
 
 
 WORLD_STAGE = {  # default standing spots (x along the boat/shore, z across); the mast is at x=1.5, keep clear of it
@@ -128,10 +129,59 @@ def find_media(ep, shot_id: str):
     return None, "card"
 
 
+def norm_word(w: str) -> str:
+    return re.sub(r"[^a-z0-9']", "", w.lower())
+
+
+def anchored_timeline(ep, shots: list[dict], seg: dict, caps: list[dict], meta: dict, args) -> None:
+    """Shots are pinned to the narration: each shot has "at": the first words of the sentence where it begins.
+    A shot lasts until the next one begins. No automatic cuts: the camera moves inside a shot, and the picture
+    only changes when the story does."""
+    words = [(norm_word(c["text"]), c["start"], c["end"]) for c in caps]
+    toks = [w[0] for w in words]
+    pos, starts = 0, []
+    for i, s in enumerate(shots):
+        phrase = [norm_word(x) for x in s["at"].split() if norm_word(x)]
+        found = None
+        for j in range(pos, len(toks) - len(phrase) + 1):
+            if toks[j:j + len(phrase)] == phrase:
+                found = j
+                break
+        if found is None:
+            raise SystemExit(f"Shot {s['id']}: could not find \"{s['at']}\" in the narration after the previous shot. "
+                             f"Use the exact first words of the sentence where this shot begins.")
+        starts.append(0.0 if i == 0 else round(words[found][1], 3))
+        pos = found + 1
+    total = round(seg["duration"] + args.outro, 3)
+    timeline = []
+    for i, s in enumerate(shots):
+        actors = build_actors(s)
+        world = s.get("world", "storm_night")
+        place_in_world(actors, world)
+        for a in actors:
+            a["speak"] = a["char"] == s.get("speaker")  # only the character who is actually speaking moves their mouth
+        names = [a["char"] for a in actors]
+        focus = names.index(s["focus"]) if s.get("focus") in names else (names.index(s["speaker"]) if s.get("speaker") in names else None)
+        cam = "pivot" if i == 0 else CALM_CAMS.get(s.get("cam", "medium"), s.get("cam", "medium"))
+        timeline.append({
+            "id": s["id"], "src": None, "type": "scene", "start": starts[i], "end": starts[i + 1] if i + 1 < len(shots) else total,
+            "motion": "", "text": "", "actors": actors, "mood": s.get("mood"), "focus": None, "cont": False,
+            "world": world, "cam": cam, "focusActor": focus,
+        })
+        print(f"  {s['id']:>5} starts {starts[i]:6.2f}s  {world:<11} {cam:<9} \"{s['at']}\"")
+    write_json(ep / "timeline.json", {
+        "fps": 30, "width": 1080, "height": 1920, "duration": total, "title": meta.get("title", ""),
+        "narration": "narration.wav", "music": None, "musicVolume": 0.12, "shots": timeline,
+        "captions": [{"text": c["text"], "start": c["start"], "end": c["end"]} for c in caps],
+        "outro": {"start": round(seg["duration"], 3), "references": []},
+    })
+    print(f"timeline.json: {len(timeline)} shots, {total:.1f}s (every shot pinned to the narration)")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
-    ap.add_argument("--outro", type=float, default=3.0, help="seconds for the closing scripture card")
+    ap.add_argument("--outro", type=float, default=1.0, help="seconds the last shot stays after the narration ends")
     ap.add_argument("--max-shot", type=float, default=3.4, help="longest time one camera angle stays on screen (s)")
     ap.add_argument("--hook-shot", type=float, default=1.4, help="length of the opening zoom shot (s)")
     args = ap.parse_args()
@@ -142,6 +192,9 @@ def main() -> None:
     caps = read_json(ep / "captions.json", {"captions": []})["captions"]
     meta = read_json(ep / "metadata.json", {})
     motion = itertools.cycle(MOTIONS)
+    if all(s.get('at') for s in shots) and shots:
+        anchored_timeline(ep, shots, seg, caps, meta, args)
+        return
 
     main = next((c for s in shots for c in (a["char"] for a in (s.get("actors") or [])) if c), None) or (shots[0].get("characters") or ["jesus"])[0]
     for s in shots:

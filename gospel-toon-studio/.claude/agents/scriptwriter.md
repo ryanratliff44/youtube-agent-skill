@@ -26,33 +26,30 @@ An episode folder `episodes/<slug>/` and a topic (e.g. "Jesus calms the storm").
 - `narration.txt` — narration only, one beat per paragraph, blank line between beats. No stage
   directions. Spell out numbers and tricky names phonetically only if the narrator needs it
   (put the phonetic hint in `script.md`, not here).
-- `shotlist.json` (layered scenes: a painted background plus animated 2D characters):
+- `shotlist.json`: every shot is PINNED TO THE NARRATION. This is the most important rule.
   ```json
   {"shots": [
-    {"id": "s03", "beat": 1, "speaker": "jesus", "camera": "handheld", "mood": "dusk",
-     "background": "empty pebble beach at dusk beside a calm lake, wooden boat resting in the shallow water",
-     "actors": [
-       {"char": "jesus", "emotion": "calm", "x": 0.3},
-       {"char": "peter", "emotion": "joy", "x": 0.1, "move": {"x": 0.52}},
-       {"char": "john", "emotion": "neutral", "x": 0.8}]}
+    {"id": "s06", "at": "Peter shakes him awake", "world": "storm_night", "mood": "storm",
+     "speaker": "peter", "cam": "close",
+     "actors": [{"char": "peter", "emotion": "panic", "at": [-1.2, 0.35]},
+                {"char": "jesus", "emotion": "sleep", "at": [-2.3, 0]}]}
   ]}
   ```
-  `beat` is the 0-based paragraph index in `narration.txt`; give each beat 2-4 shots.
-  - `background`: the place only, never people (see the bible's background lessons).
-  - `actors[].char`: jesus, peter, john, mary, crowd (add more in `tools/make_characters.py` and
-    `editor/src/Character.tsx`). `emotion` drives the whole body, not just the face:
-    neutral, calm, joy (arms up, hopping), laugh (bouncing, mouth open), fear (trembling, arms up),
-    panic (arms flailing, jumping), anger (leaning in, fist up), sad (slumped), awe (stepping back, arms out),
-    sleep (breathing, head nod), smug (arm folded, head tilted), command (one arm raised).
-  - `move`: `{"x": 0.5}` (and optional `y`) makes the character WALK to that spot during the shot. Use it
-    often: characters should come and go, not stand still.
-  - `speaker`: whose mouth moves with the narration words (default: the first actor). Gestures and head nods
-    come with it. Optional per actor: `scale`, `flip`, `y`, `glow`.
-  - `world`: the 3D place: `storm_night` (boat in a storm), `calm_night` (boat on a still starry lake), `dusk_shore` (beach at sunset), `camp_night` (night camp with fire, torches, tents). Every shot needs one, and every shot needs a character.
-  - `mood`: day, dusk, night, storm or calm. Storms also shake the camera.
-  - `camera`: punch in, punch out, pulse, whip (fast pan with blur), dutch (tilted), handheld (shaky), zoom-in,
-    pull out, pan left/right. Vary them shot to shot; the builder also cuts each scene into quick angles.
-  Let the characters feel something. Pick the strongest emotion for each beat and let it show in the body.
+  - `at`: the first words of the sentence in `narration.txt` where this shot BEGINS. The shot lasts until the next
+    shot's `at`. The first shot starts at the very beginning. Words must match the narration exactly.
+  - **The picture must show what the narrator is saying at that moment**: same place, same people, and an
+    emotion that fits that sentence. Never show something the narration is not talking about. Re-read each
+    sentence and ask "what is on screen while this is said?" Change the shot only when the story changes
+    (a new place, a new speaker, a turn in the story), usually every 4-8 seconds. No cuts for variety.
+  - `world`: `storm_night`, `calm_night` (boat), `dusk_shore` (beach), `camp_night` (camp with fire).
+    Every shot has at least one character, always.
+  - `actors[].emotion` (keep it believable, never over the top): neutral, calm, warm (gentle smile), joy, laugh,
+    fear (worried), panic (rare, only for real panic), anger, sad, awe (stunned), sleep, smug, command.
+    `at: [x, z]` is the spot on the stage. On the boat keep x between -2.4 and 0.4 (the mast is at 1.5).
+  - `speaker`: ONLY when a character is actually speaking a quoted line in the narration; their mouth moves with
+    the words. Leave it out for narration-only sentences.
+  - `cam`: wide, medium, close, low_hero, push_in, pull_back (slow moves). The first shot always gets the one
+    big opening zoom automatically. `focus`: which character a close shot looks at.
 - `metadata.json`:
   ```json
   {"title": "...", "description": "...(include the reference)...", "hashtags": ["#Jesus", "#Bible"],
