@@ -70,3 +70,28 @@ We learn the *style*. We never copy Ricks Clips' characters, backgrounds or scri
   layered pipeline: (1) one still background image per scene, (2) a small set of consistent 2D character
   sprites, (3) simple motion in the editor (slide, bob, zoom, parallax). It is also much faster and
   fluid, and characters stay identical in every shot.
+
+## Measured from the real file: "How One Cart Stopped an Entire Army" (15 s, 1080x1920, 30 fps)
+(Watched via tools/watch_video.py picture sheets. Audio could not be heard; sound notes come from loudness only.)
+- **Starts mid-action at frame 1.** No title card, no fade-in. The first caption word shows at 0.0 s.
+- **Fast hook:** in the first 3 s the picture changes about 6 times (a new camera angle every ~0.5 s): wide
+  of the character, quick zoom onto his face, extreme close-up of the prop, cutaway to the wall, a
+  pagoda, then a wide landscape. After the hook, angles last about 1-1.5 s; one 3 s stretch holds a single
+  shot while expressions change. Overall about 12 angles in 15 s (average ~1.2 s).
+- **Angles are camera moves in a 3D scene** (push-in, crane, close-up on a prop), not just zooms on a flat
+  image. Close-ups on faces when someone speaks. Characters barely move; faces carry the emotion.
+- **Captions:** exactly one word at a time, bold white sans-serif with a thick black outline, no box, centered
+  horizontally at about 70% of the height. Roughly 3.3 words a second (about 190-200 wpm). Timed to the word.
+- **Characters:** big round head (about a third of the body height), small dot eyes with heavy lids or
+  brows doing the acting, tiny mouth, tiny hands, thin stick legs, a flat colored bean body with clothing
+  details (patterns, armor, belts). Faces are plain and pale; props and clothes identify the role.
+- **Backgrounds:** bright, sunny, saturated 3D look with real depth (grass, stone, sky, hills), strong
+  directional light and shallow haze. Characters sit on it with thin outlines and no outlined background.
+- **Sound:** loudness stays between about -15 and -22 dB the whole way with no big dips: a steady music or
+  effects bed under constant narration. No silences.
+- **Humor:** deadpan one-liners ("Are we fighting them or cheese?"), delivered straight.
+
+## What the studio now does about it
+- Auto angle cuts: `tools/build_timeline.py` splits every scene into quick camera angles (0.8 s in the first
+  3 s, 1.6 s after): wide, face close-up, medium, second face. `--hook-shot` and `--max-shot` change this.
+- Characters stay put while the camera moves, like the reference. Captions sit at about 67-70% height.

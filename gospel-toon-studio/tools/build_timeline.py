@@ -19,6 +19,32 @@ FLOOR_Y = 0.80  # where characters' feet stand (fraction of frame height)
 EXPR_ANIM = {"asleep": "sway", "worried": "shake", "surprised": "hop", "angry": "bob"}
 
 
+HEAD_FROM_TOP = 0.17  # head centre, as a fraction of sprite height from its top
+CHAR_FRAC = 880 / 1920  # sprite height at scale 1, as a fraction of frame height
+
+
+def face_point(a: dict) -> tuple[float, float]:
+    """Where an actor's face is in the frame (0-1)."""
+    h = CHAR_FRAC * a["scale"]
+    return a["x"], a["y"] - h * (1 - HEAD_FROM_TOP)
+
+
+def angles(actors: list[dict], n: int) -> list[dict | None]:
+    """Camera angles for n back-to-back cuts of one scene: wide, close-ups on faces, medium, and so on."""
+    seq: list[dict | None] = [None]
+    if actors:
+        fx, fy = face_point(actors[0])
+        seq.append({"x": fx, "y": fy, "s": 1.6})
+        cx = sum(a["x"] for a in actors) / len(actors)
+        seq.append({"x": cx, "y": actors[0]["y"] - CHAR_FRAC * actors[0]["scale"] * 0.45, "s": 1.25})
+        if len(actors) > 1:
+            lx, ly = face_point(actors[-1])
+            seq.append({"x": lx, "y": ly, "s": 1.6})
+    else:
+        seq += [{"x": 0.5, "y": 0.55, "s": 1.35}, {"x": 0.3, "y": 0.5, "s": 1.3}, {"x": 0.7, "y": 0.5, "s": 1.3}]
+    return [seq[i % len(seq)] for i in range(n)]
+
+
 def build_actors(shot: dict) -> list[dict]:
     """Turn a shot's actors (or its plain characters list) into editor actors with sensible defaults."""
     raw = shot.get("actors")
@@ -54,6 +80,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
     ap.add_argument("--outro", type=float, default=3.0, help="seconds for the closing scripture card")
+    ap.add_argument("--max-shot", type=float, default=1.6, help="longest time one camera angle stays on screen (s)")
+    ap.add_argument("--hook-shot", type=float, default=0.8, help="longest angle in the first 3 s (fast hook)")
     args = ap.parse_args()
 
     ep = episode_dir(args.episode)
@@ -80,12 +108,27 @@ def main() -> None:
                 kind = "scene" if kind == "image" else kind
             elif kind == "card":
                 missing.append(shot["id"])
-            timeline.append({
-                "id": shot["id"], "src": src, "type": kind,
-                "start": round(start + j * step, 3), "end": round(start + (j + 1) * step, 3),
-                "motion": CAMERA.get(str(shot.get("camera", "")).lower()) or next(motion), "text": shot.get("onscreen_text", ""),
-                "actors": actors, "mood": shot.get("mood"),
-            })
+            s0, s1 = round(start + j * step, 3), round(start + (j + 1) * step, 3)
+            motion_main = CAMERA.get(str(shot.get("camera", "")).lower()) or next(motion)
+            # Cut the scene into quick angle changes: fast in the hook, a bit slower after.
+            pieces, cur = [], s0
+            while cur < s1 - 0.05:
+                limit = args.hook_shot if cur < 3.0 else args.max_shot
+                nxt = min(s1, cur + limit)
+                if s1 - nxt < limit * 0.45:  # don't leave a tiny sliver at the end
+                    nxt = s1
+                pieces.append((round(cur, 3), round(nxt, 3)))
+                cur = nxt
+            angs = angles(actors, len(pieces))
+            for k, (a0, a1) in enumerate(pieces):
+                timeline.append({
+                    "id": shot["id"] if k == 0 else f"{shot['id']}.{k}", "src": src, "type": kind,
+                    "start": a0, "end": a1,
+                    "motion": motion_main if k == 0 else ("punch", "zoom-in", "pulse")[k % 3],
+                    "text": shot.get("onscreen_text", "") if k == 0 else "",
+                    "actors": actors, "mood": shot.get("mood"),
+                    "focus": angs[k], "cont": k > 0,
+                })
 
     total = seg["duration"] + args.outro
     write_json(ep / "timeline.json", {

@@ -127,7 +127,7 @@ def main() -> None:
     ap.add_argument("source")
     ap.add_argument("--out")
     ap.add_argument("--every", type=float, default=1.0, help="seconds between frames in the sheets")
-    ap.add_argument("--cut-threshold", type=float, default=0.3, help="lower = detects more cuts")
+    ap.add_argument("--cut-threshold", type=float, default=0.04, help="lower = detects more cuts")
     ap.add_argument("--browser", help="chrome, edge or firefox: borrow your logged-in browser's cookies for the download")
     ap.add_argument("--no-transcript", action="store_true")
     args = ap.parse_args()
@@ -176,7 +176,7 @@ def main() -> None:
               f"- Description: {(info.get('description') or '')[:300]!r}", f"- Tags: {', '.join((info.get('tags') or [])[:12])}"]
     L += [f"- Format: {meta['width']}x{meta['height']} at {meta['fps']} fps, {dur:.1f} s", "",
           "## Pacing", f"- Cuts detected: {len(cuts)}  Average shot length: {avg} s  Shortest: {min(lens)} s  Longest: {max(lens)} s",
-          f"- Cut times (s): {', '.join(f'{c:.1f}' for c in cuts)}", f"- Shot lengths (s): {lens}", "",
+          f"- Cut times (s): {', '.join(f'{c:.1f}' for c in cuts)}", "- NOTE: automatic cut detection misses cuts between similar-looking scenes (3D/animated videos). Trust the picture sheets for real pacing.", f"- Shot lengths (s): {lens}", "",
           "## Speech", f"- Words per minute: {wpm}", f"- First 3 seconds (hook): {hook_words!r}",
           f"- Pauses over 0.6 s (at s, length s): {pauses}"]
     if tr_err:

@@ -13,8 +13,8 @@ You are the **Editor** for Gospel Toon Studio. Pacing and clarity are your job.
    across its shots; stills get a gentle motion (zoom-in, zoom-out, pan-left, pan-right).
 3. Edit `timeline.json` by hand where pacing needs it:
    - First shot must be the strongest image (the hook).
-   - Cut every 1.5–3 s like the reference videos (wide → medium → reaction close-up). Nothing over
-     4 s except the closing card; ask the B-roll artist for more reaction shots if a beat runs long.
+   - The builder already cuts each scene into quick camera angles (0.8 s in the first 3 s, then 1.6 s). Tune
+     with `--hook-shot` / `--max-shot`. Start mid-action on frame 1: no title card or fade-in.
    - Set `music` to a file in the episode folder (royalty-free only, e.g. YouTube Audio Library) and
      keep `musicVolume` around 0.10–0.15 so narration stays clear.
    - The closing card shows the references from `metadata.json`.
