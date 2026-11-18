@@ -52,16 +52,18 @@ export const Char3D: React.FC<Char3DProps> = ({char, emotion, t, mouth, walk, sp
 	const skin = SKIN[def.skin];
 	const w = 2 * Math.PI;
 	const tt = t + phase;
-	const flail = E.flail * Math.sin(tt * w * E.rate);
+	const CALM = 0.3; // acting lives in the face; the body stays small and natural
+	const flail = E.flail * CALM * Math.sin(tt * w * E.rate);
 	const swing = Math.sin(tt * w * 1.9) * 32 * walk;
-	const gest = speaking ? Math.sin(tt * w * 1.6) * 16 : 0;
-	const armL = E.armL + flail - swing * 0.8 + gest * 0.4;
-	const armR = E.armR - flail * 0.8 + swing * 0.8 + gest;
-	const foreL = E.foreL + flail * 0.4 + (speaking ? 8 * Math.sin(tt * w * 2.3) : 0);
-	const foreR = E.foreR - flail * 0.3 + (speaking ? 14 * Math.sin(tt * w * 2.1 + 1) : 0);
-	const hop = (E.hop / 560) * 1.95 * Math.abs(Math.sin(tt * w * E.rate * 0.5)) + Math.abs(Math.sin(tt * w * 1.9)) * 0.05 * walk;
-	const jx = (E.shake / 300) * (Math.sin(tt * 38) + 0.6 * Math.sin(tt * 61));
-	const jy = (E.shake / 300) * 0.5 * Math.sin(tt * 47);
+	const gest = speaking ? Math.sin(tt * w * 1.3) * 5 : 0;
+	const ease = (a: number) => 10 + (a - 10) * 0.42; // pull big arm poses toward a relaxed arm
+	const armL = Math.min(75, ease(E.armL) + flail - swing * 0.8 + gest * 0.4);
+	const armR = Math.min(75, ease(E.armR) - flail * 0.8 + swing * 0.8 + gest);
+	const foreL = E.foreL * 0.5 + flail * 0.3 + (speaking ? 3 * Math.sin(tt * w * 2.3) : 0);
+	const foreR = E.foreR * 0.5 - flail * 0.2 + (speaking ? 5 * Math.sin(tt * w * 2.1 + 1) : 0);
+	const hop = (E.hop / 560) * 1.95 * 0.35 * Math.abs(Math.sin(tt * w * E.rate * 0.5)) + Math.abs(Math.sin(tt * w * 1.9)) * 0.05 * walk;
+	const jx = (E.shake / 300) * 0.4 * (Math.sin(tt * 38) + 0.6 * Math.sin(tt * 61));
+	const jy = (E.shake / 300) * 0.2 * Math.sin(tt * 47);
 	const bob = (E.bob / 300) * Math.sin(tt * w * 0.9);
 	const tilt = (E.tilt * Math.sin(tt * w * 0.4 + 0.5) + (speaking ? 2.5 * Math.sin(tt * w * 3.5) : 0)) * D;
 	const breathe = 1 + 0.012 * Math.sin(tt * w * 0.8);
@@ -97,10 +99,16 @@ export const Char3D: React.FC<Char3DProps> = ({char, emotion, t, mouth, walk, sp
 			));
 		const r = ex === 'worried' || ex === 'sad' ? 0.055 : 0.047;
 		return [-0.15, 0.15].map((x) => (
-			<mesh key={x} position={[x, 0.04, 0.392]} scale={[1, blink, 0.5]}>
-				<sphereGeometry args={[r, 12, 10]} />
-				<meshBasicMaterial color={INK} />
-			</mesh>
+			<group key={x} position={[x, 0.04, 0.392]}>
+				<mesh scale={[1, blink, 0.5]}>
+					<sphereGeometry args={[r * 1.12, 14, 12]} />
+					<meshBasicMaterial color={INK} />
+				</mesh>
+				<mesh position={[r * 0.35, r * 0.4 * blink, 0.02]} scale={[1, blink, 0.5]}>
+					<sphereGeometry args={[r * 0.3, 8, 6]} />
+					<meshBasicMaterial color="#ffffff" />
+				</mesh>
+			</group>
 		));
 	})();
 
@@ -108,9 +116,9 @@ export const Char3D: React.FC<Char3DProps> = ({char, emotion, t, mouth, walk, sp
 		const z = 0.405;
 		if (open > 0.06)
 			return (
-				<mesh position={[0, -0.16, z]} scale={[0.07 + open * 0.06, 0.018 + open * 0.085, 0.3]}>
+				<mesh position={[0, -0.16, z]} scale={[0.06 + open * 0.035, 0.016 + open * 0.045, 0.3]}>
 					<sphereGeometry args={[1, 14, 10]} />
-					<meshBasicMaterial color={beardy ? '#a63a35' : INK} />
+					<meshBasicMaterial color={beardy ? '#5a1f1c' : INK} />
 				</mesh>
 			);
 		if (ex === 'smile')
@@ -236,6 +244,12 @@ export const Char3D: React.FC<Char3DProps> = ({char, emotion, t, mouth, walk, sp
 					</Part>
 				) : null}
 				{eyes}
+				{[-1, 1].map((q) => (
+					<mesh key={q} position={[q * 0.25, -0.07, 0.31]} scale={[1, 0.7, 0.3]}>
+						<sphereGeometry args={[0.07, 10, 8]} />
+						<meshBasicMaterial color="#e9857a" transparent opacity={0.45} />
+					</mesh>
+				))}
 				{[-1, 1].map((s) => (
 					<mesh key={s} position={[s * 0.15, 0.14 + browY, 0.385]} rotation={[0, 0, s * brow]}>
 						<boxGeometry args={[0.14, 0.026, 0.024]} />

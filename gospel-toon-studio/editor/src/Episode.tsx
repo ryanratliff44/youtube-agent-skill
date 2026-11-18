@@ -212,8 +212,8 @@ const WorldShot: React.FC<{shot: Shot; frames: number; lead: number; from: numbe
 		const c = acts.map((o) => chest(o.world));
 		subject = [c.reduce((s, v) => s + v[0], 0) / c.length, c.reduce((s, v) => s + v[1], 0) / c.length, c.reduce((s, v) => s + v[2], 0) / c.length];
 	} else subject = stageToWorld(scene, [0, 1.4, 0], t);
-	const cam = cameraFor(shot.cam ?? 'wide', subject, k, t, shot.mood === 'storm' || scene === 'storm_night' ? 2.2 : 1);
-	const blur = shot.cam === 'whip' ? (1 - snap(local, 0, 8)) * 10 : 0;
+	const cam = cameraFor(shot.cam ?? 'wide', subject, k, t, scene === 'storm_night' ? 0.8 : 0.35);
+	const blur = 0;
 	const chars: Placed[] = acts.map((o) => {
 		const cap = captions.find((c) => t >= c.start && t < c.end);
 		const speaking = Boolean(o.a.speak && cap && o.a.emotion !== 'sleep');
@@ -321,7 +321,16 @@ export const Episode: React.FC<Timeline> = (t) => {
 				);
 			})}
 			<Sequence from={f(t.outro.start)} name="outro">
-				<Card title={t.outro.references.join('\n') || t.title} subtitle="Read it for yourself" />
+				{t.shots.some((x) => x.world) ? (
+					<AbsoluteFill style={{alignItems: 'center'}}>
+						<div style={{position: 'absolute', top: 170, textAlign: 'center', fontFamily: SERIF, color: PARCHMENT, background: 'rgba(59,42,26,0.78)', padding: '20px 36px', borderRadius: 18}}>
+							<div style={{fontSize: 56, whiteSpace: 'pre-line'}}>{t.outro.references.join('\n') || t.title}</div>
+							<div style={{fontSize: 34, color: '#e2b95c', fontStyle: 'italic', marginTop: 8}}>Read it for yourself</div>
+						</div>
+					</AbsoluteFill>
+				) : (
+					<Card title={t.outro.references.join('\n') || t.title} subtitle="Read it for yourself" />
+				)}
 			</Sequence>
 			{t.captions.map((c, i) => (
 				<Sequence key={i} from={f(c.start)} durationInFrames={Math.max(1, f(c.end) - f(c.start))} name={`cap ${i}`}>

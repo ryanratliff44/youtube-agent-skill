@@ -450,17 +450,17 @@ export const Boat: React.FC<{cfg: SceneCfg; t: number}> = ({cfg, t}) => {
 				</mesh>
 			))}
 			{/* mast, boom and sail */}
-			<mesh position={[0.9, DECK_Y + 2.5, 0]}>
-				<cylinderGeometry args={[0.07, 0.1, 5.2, 8]} />
+			<mesh position={[1.5, DECK_Y + 3.1, 0]}>
+				<cylinderGeometry args={[0.07, 0.1, 6.2, 8]} />
 				<meshStandardMaterial color="#5e3b1d" flatShading />
 			</mesh>
-			<mesh position={[-0.4, DECK_Y + 1.55, 0]} rotation={[0, 0, Math.PI / 2]}>
-				<cylinderGeometry args={[0.05, 0.05, 3.0, 6]} />
+			<mesh position={[0.1, DECK_Y + 2.6, 0]} rotation={[0, 0, Math.PI / 2]}>
+				<cylinderGeometry args={[0.05, 0.05, 3.2, 6]} />
 				<meshStandardMaterial color="#5e3b1d" flatShading />
 			</mesh>
 			{sailH > 0.3 ? (
-				<mesh position={[-0.4, DECK_Y + 1.6 + sailH / 2, flap]} rotation={[flap, 0, 0]}>
-					<boxGeometry args={[2.6, sailH, 0.03]} />
+				<mesh position={[0.1, DECK_Y + 2.65 + sailH / 2, flap]} rotation={[flap, 0, 0]}>
+					<boxGeometry args={[3.0, sailH, 0.03]} />
 					<meshStandardMaterial color="#e6dcc2" flatShading emissive="#3a3426" emissiveIntensity={0.6} />
 				</mesh>
 			) : null}

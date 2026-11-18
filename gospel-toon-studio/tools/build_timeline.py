@@ -51,11 +51,15 @@ EXPR_TO_EMOTION = {"neutral": "neutral", "calm": "calm", "smile": "joy", "worrie
 EMOTIONS = ["neutral", "calm", "joy", "laugh", "fear", "panic", "anger", "sad", "awe", "sleep", "smug", "command"]
 
 
-WORLD_STAGE = {  # default standing spots (x along the boat/shore, z across) by number of actors
-    "boat": {1: [[-0.5, 0]], 2: [[-1.2, 0], [0.5, 0.3]], 3: [[-1.6, 0], [-0.2, 0.3], [1.2, -0.2]]},
+WORLD_STAGE = {  # default standing spots (x along the boat/shore, z across); the mast is at x=1.5, keep clear of it
+    "boat": {1: [[-0.8, 0.1]], 2: [[-1.7, 0.1], [-0.2, 0.35]], 3: [[-2.3, 0.05], [-1.1, 0.35], [0.1, 0.1]]},
     "shore": {1: [[0, 0.3]], 2: [[-0.9, 0.3], [0.9, 0.5]], 3: [[-1.5, 0.5], [0, 0.2], [1.4, 0.6]]},
 }
-CAM_CYCLE = ["wide", "push_in", "low_hero", "close", "orbit", "whip", "crane_up", "dutch", "pull_back", "over_water"]
+# Camera: ONE big pivotal zoom at the very start, then only calm, slow moves.
+CALM_CAMS = {"whip": "medium", "dutch": "low_hero", "pulse": "medium", "punch": "medium", "punch-out": "wide", "handheld": "medium",
+             "orbit": "medium", "crane_up": "wide", "reveal": "wide", "zoom-in": "medium", "zoom-out": "wide", "slow push in": "medium",
+             "pull out": "wide", "static": "medium", "punch in": "medium", "pan left": "medium", "pan right": "medium"}
+FOLLOW_UPS = ["medium", "close", "medium", "close", "low_hero", "close"]  # after an establishing shot: faces and a little variety
 
 
 def place_in_world(actors: list[dict], world: str) -> None:
@@ -64,6 +68,19 @@ def place_in_world(actors: list[dict], world: str) -> None:
     for i, a in enumerate(actors):
         if a.get("at") is None and i < len(spots):
             a["at"] = spots[i]
+
+
+def world_fields(world: str, shot: dict, k: int, a0: float, n_act: int, speaker: int, first_shot: bool) -> dict:
+    raw = shot.get("cam", "medium")
+    base = CALM_CAMS.get(raw, raw if raw in ("wide", "medium", "close", "low_hero", "push_in", "pull_back", "over_water") else "medium")
+    if first_shot and k == 0:
+        cam = "pivot"  # the one opening zoom
+    elif k == 0:
+        cam = base
+    else:
+        cam = FOLLOW_UPS[(k - 1) % len(FOLLOW_UPS)]
+    close_up = cam in ("close", "push_in", "pivot", "low_hero")
+    return {"world": world, "cam": cam, "focusActor": (speaker if close_up and n_act > 0 else None)}
 
 
 def build_actors(shot: dict) -> list[dict]:
@@ -114,8 +131,8 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
     ap.add_argument("--outro", type=float, default=3.0, help="seconds for the closing scripture card")
-    ap.add_argument("--max-shot", type=float, default=1.6, help="longest time one camera angle stays on screen (s)")
-    ap.add_argument("--hook-shot", type=float, default=0.8, help="longest angle in the first 3 s (fast hook)")
+    ap.add_argument("--max-shot", type=float, default=3.4, help="longest time one camera angle stays on screen (s)")
+    ap.add_argument("--hook-shot", type=float, default=1.4, help="length of the opening zoom shot (s)")
     args = ap.parse_args()
 
     ep = episode_dir(args.episode)
@@ -125,6 +142,11 @@ def main() -> None:
     meta = read_json(ep / "metadata.json", {})
     motion = itertools.cycle(MOTIONS)
 
+    main = next((c for s in shots for c in (a["char"] for a in (s.get("actors") or [])) if c), None) or (shots[0].get("characters") or ["jesus"])[0]
+    for s in shots:
+        if not (s.get("actors") or s.get("characters")):
+            s["actors"] = [{"char": main, "emotion": "calm"}]
+            print(f"  note: shot {s['id']} had no character, added {main} so the story is always told by someone")
     timeline, missing = [], []
     segments = seg["segments"]
     for k, s in enumerate(segments):
@@ -147,9 +169,9 @@ def main() -> None:
             # Cut the scene into quick angle changes: fast in the hook, a bit slower after.
             pieces, cur = [], s0
             while cur < s1 - 0.05:
-                limit = args.hook_shot if cur < 3.0 else args.max_shot
+                limit = args.hook_shot if (cur < 0.05 and not timeline) else args.max_shot
                 nxt = min(s1, cur + limit)
-                if s1 - nxt < limit * 0.45:  # don't leave a tiny sliver at the end
+                if s1 - nxt < limit * 0.5:  # don't leave a short sliver at the end
                     nxt = s1
                 pieces.append((round(cur, 3), round(nxt, 3)))
                 cur = nxt
@@ -157,7 +179,8 @@ def main() -> None:
             world = shot.get("world")
             if world:
                 place_in_world(actors, world)
-                first = CAM_CYCLE.index(shot["cam"]) if shot.get("cam") in CAM_CYCLE else 0
+                n_act = len(actors)
+                sp = next((i for i, a in enumerate(actors) if a.get("speak")), 0)
             for k, (a0, a1) in enumerate(pieces):
                 timeline.append({
                     "id": shot["id"] if k == 0 else f"{shot['id']}.{k}", "src": src, "type": kind,
@@ -166,10 +189,12 @@ def main() -> None:
                     "text": shot.get("onscreen_text", "") if k == 0 else "",
                     "actors": actors, "mood": shot.get("mood"),
                     "focus": None if world else angs[k], "cont": k > 0,
-                    **({"world": world, "cam": CAM_CYCLE[(first + k * 3) % len(CAM_CYCLE)] if len(pieces) > 1 and k > 0 else shot.get("cam", "wide")} if world else {}),
+                    **(world_fields(world, shot, k, a0, n_act, sp, first_shot=not timeline) if world else {}),
                 })
 
     total = seg["duration"] + args.outro
+    if timeline:
+        timeline[-1]["end"] = round(total, 3)  # the last shot stays on screen under the closing reference
     write_json(ep / "timeline.json", {
         "fps": 30, "width": 1080, "height": 1920,
         "duration": round(total, 3),
