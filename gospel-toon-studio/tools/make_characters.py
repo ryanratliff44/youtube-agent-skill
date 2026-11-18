@@ -17,7 +17,7 @@ INK = "#2b1b12"
 SKIN = {"light": "#f2c9a0", "olive": "#d9a273", "tan": "#c98f5e"}
 
 CHARACTERS = {
-    "jesus": dict(skin="olive", robe="#f3ead8", sash="#3f6fb5", hair="#5a3a22", style="long", beard="#5a3a22", glow=True),
+    "jesus": dict(skin="olive", robe="#f3ead8", sash="#3f6fb5", hair="#5a3a22", style="long", beard="#5a3a22"),
     "peter": dict(skin="tan", robe="#9b6b3c", sash="#6b4423", hair="#2c1b12", style="curly", beard="#2c1b12", beard_big=True),
     "john": dict(skin="olive", robe="#d8c196", sash="#8a6d3b", hair="#4a3322", style="short", beard=None),
     "mary": dict(skin="olive", robe="#f3ead8", sash=None, hair=None, style="veil", beard=None, veil="#3f6fb5"),

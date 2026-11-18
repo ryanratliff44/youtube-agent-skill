@@ -40,6 +40,7 @@ An episode folder `episodes/<slug>/` and a topic (e.g. "Jesus calms the storm").
   `char` must exist in `assets/characters/` (jesus, peter, john, mary, crowd); `expr` is one of
   neutral, smile, worried, surprised, asleep, angry, calm; optional `x` (0-1 across), `scale`, `flip`,
   `anim` (none, bob, sway, shake, hop, slide-in). `mood` is day, dusk, night, storm or calm.
+  `camera`: punch in (quick snap-in, the default feel), punch out, pulse (repeated quick zoom bumps), slow push in, pull out, pan left/right. Vary them shot to shot.
   Use close-ups (one big actor), two-shots and empty establishing shots (no actors) for variety.
 - `metadata.json`:
   ```json

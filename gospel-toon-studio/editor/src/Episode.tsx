@@ -19,6 +19,7 @@ export type Actor = {
 	scale: number;
 	flip: boolean;
 	anim: 'none' | 'bob' | 'sway' | 'shake' | 'slide-in' | 'hop';
+	glow?: boolean;
 };
 
 export type Shot = {
@@ -27,7 +28,7 @@ export type Shot = {
 	type: 'video' | 'image' | 'card' | 'scene';
 	start: number;
 	end: number;
-	motion: 'zoom-in' | 'zoom-out' | 'pan-left' | 'pan-right';
+	motion: string;
 	text?: string;
 	actors?: Actor[];
 	mood?: 'day' | 'dusk' | 'night' | 'storm' | 'calm';
@@ -99,6 +100,9 @@ const ActorView: React.FC<{actor: Actor; index: number}> = ({actor, index}) => {
 	const w = (h * 300) / 560;
 	return (
 		<div style={{position: 'absolute', left: actor.x * width - w / 2 + dx, top: actor.y * height - h + dy, width: w, height: h, transformOrigin: '50% 100%', transform: `scale(${0.85 + 0.15 * pop}) rotate(${rot}deg) scaleX(${actor.flip ? -1 : 1})`, opacity: pop}}>
+			{actor.glow ? (
+				<div style={{position: 'absolute', left: -w * 0.5, top: h * 0.05, width: w * 2, height: w * 2, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,243,176,0.7) 0%, rgba(255,243,176,0.25) 40%, rgba(255,243,176,0) 68%)'}} />
+			) : null}
 			<div style={{position: 'absolute', left: '12%', right: '12%', bottom: -h * 0.02, height: h * 0.05, borderRadius: '50%', background: 'rgba(0,0,0,0.28)', filter: 'blur(6px)'}} />
 			<Img src={staticFile(actor.src)} style={{width: '100%', height: '100%'}} />
 		</div>
@@ -113,32 +117,57 @@ const MOOD: Record<string, string> = {
 	calm: 'rgba(120,160,255,0.12)',
 };
 
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
+const snap = (frame: number, f0: number, f1: number) => 1 - Math.pow(1 - clamp01((frame - f0) / (f1 - f0)), 3); // fast ease-out
+
+// The whole scene (background + characters) moves together like a camera.
+const cameraTransform = (motion: string, frame: number, frames: number): string => {
+	const p = clamp01(frame / Math.max(1, frames));
+	switch (motion) {
+		case 'punch': // quick snap in, then a slow creep
+			return `scale(${1 + 0.22 * snap(frame, 0, 6) + 0.05 * p})`;
+		case 'punch-out': // starts zoomed in, snaps back out
+			return `scale(${1.28 - 0.26 * snap(frame, 0, 7) + 0.04 * p})`;
+		case 'pulse': {
+			// a quick zoom-in bump every 0.75 s that eases back
+			const phase = frame % 22;
+			const kick = Math.pow(Math.max(0, 1 - phase / 8), 2) * 0.09;
+			return `scale(${1.05 + 0.05 * p + kick})`;
+		}
+		case 'zoom-in':
+			return `scale(${1.04 + 0.12 * p})`;
+		case 'zoom-out':
+			return `scale(${1.16 - 0.12 * p})`;
+		case 'pan-left':
+			return `scale(1.15) translateX(${4 - 8 * p}%)`;
+		case 'pan-right':
+			return `scale(1.15) translateX(${-4 + 8 * p}%)`;
+		default:
+			return 'scale(1)';
+	}
+};
+
 const Moving: React.FC<{shot: Shot; frames: number}> = ({shot, frames}) => {
 	const frame = useCurrentFrame();
-	const p = interpolate(frame, [0, frames], [0, 1], {extrapolateRight: 'clamp'});
-	const t = {
-		'zoom-in': `scale(${1.04 + 0.1 * p})`,
-		'zoom-out': `scale(${1.14 - 0.1 * p})`,
-		'pan-left': `scale(1.15) translateX(${4 - 8 * p}%)`,
-		'pan-right': `scale(1.15) translateX(${-4 + 8 * p}%)`,
-	}[shot.motion];
-	const fade = interpolate(frame, [0, 6], [0, 1], {extrapolateRight: 'clamp'});
-	const media = {width: '100%', height: '100%', objectFit: 'cover' as const, transform: t};
+	const fade = interpolate(frame, [0, 2], [0.65, 1], {extrapolateRight: 'clamp'});
+	const media = {width: '100%', height: '100%', objectFit: 'cover' as const};
 	return (
 		<AbsoluteFill style={{opacity: fade, overflow: 'hidden', backgroundColor: INK}}>
-			{shot.type === 'scene' && !shot.src ? (
-				<AbsoluteFill style={{background: 'linear-gradient(180deg, #7fb6e6 0%, #cfe3f3 55%, #8fae6a 56%, #5f7f45 100%)'}} />
-			) : shot.type === 'video' && shot.src ? (
-				<OffthreadVideo src={staticFile(shot.src)} muted style={{...media, transform: shot.motion.startsWith('zoom') ? t : 'scale(1.02)'}} />
-			) : (shot.type === 'image' || shot.type === 'scene') && shot.src ? (
-				<Img src={staticFile(shot.src)} style={media} />
-			) : (
-				<Card title={shot.text || shot.id} />
-			)}
-			{shot.mood ? <AbsoluteFill style={{background: MOOD[shot.mood], mixBlendMode: 'multiply'}} /> : null}
-			{(shot.actors || []).map((a, i) => (
-				<ActorView key={i} actor={a} index={i} />
-			))}
+			<AbsoluteFill style={{transform: cameraTransform(shot.motion, frame, frames), transformOrigin: '50% 58%'}}>
+				{shot.type === 'scene' && !shot.src ? (
+					<AbsoluteFill style={{background: 'linear-gradient(180deg, #7fb6e6 0%, #cfe3f3 55%, #8fae6a 56%, #5f7f45 100%)'}} />
+				) : shot.type === 'video' && shot.src ? (
+					<OffthreadVideo src={staticFile(shot.src)} muted style={media} />
+				) : (shot.type === 'image' || shot.type === 'scene') && shot.src ? (
+					<Img src={staticFile(shot.src)} style={media} />
+				) : (
+					<Card title={shot.text || shot.id} />
+				)}
+				{shot.mood ? <AbsoluteFill style={{background: MOOD[shot.mood], mixBlendMode: 'multiply'}} /> : null}
+				{(shot.actors || []).map((a, i) => (
+					<ActorView key={i} actor={a} index={i} />
+				))}
+			</AbsoluteFill>
 			{shot.text && shot.type !== 'card' ? (
 				<div style={{position: 'absolute', top: 150, width: '100%', textAlign: 'center'}}>
 					<span style={{fontFamily: SERIF, fontSize: 46, color: PARCHMENT, background: 'rgba(59,42,26,0.72)', padding: '12px 28px', borderRadius: 14}}>{shot.text}</span>

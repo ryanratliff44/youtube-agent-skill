@@ -17,7 +17,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "slow push in",
+      "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, huge storm waves towering behind, dark thunderclouds and lightning at night"
     },
     {
@@ -36,7 +36,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "static",
+      "camera": "pulse",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain streaking, dark stormy night sky with lightning flash"
     },
     {
@@ -77,7 +77,7 @@
         }
       ],
       "mood": "dusk",
-      "camera": "static",
+      "camera": "pulse",
       "prompt": "pebble beach shore at dusk beside a small wooden fishing boat with a rope, warm orange sky"
     },
     {
@@ -96,7 +96,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "static",
+      "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, violent storm with huge waves crashing over the side, dark night"
     },
     {
@@ -116,7 +116,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "static",
+      "camera": "pulse",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, water sloshing on deck, rain and spray, stormy night"
     },
     {
@@ -136,7 +136,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "slow push in",
+      "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain falling, dim lantern light, stormy night"
     },
     {
@@ -164,7 +164,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "static",
+      "camera": "pulse",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, stormy night with spray, lantern swinging"
     },
     {
@@ -184,7 +184,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "static",
+      "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain and spray flying, dark stormy blue light"
     },
     {
@@ -204,7 +204,7 @@
         }
       ],
       "mood": "storm",
-      "camera": "slow push in",
+      "camera": "pulse",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, wind howling, huge dark clouds above rough sea, one ray of light breaking through"
     },
     {
@@ -230,7 +230,7 @@
         }
       ],
       "mood": "calm",
-      "camera": "slow push in",
+      "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, the wind suddenly still, water droplets hanging in the air, warm glow spreading over the sea"
     },
     {
@@ -264,7 +264,7 @@
         }
       ],
       "mood": "night",
-      "camera": "static",
+      "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night"
     },
     {
@@ -283,7 +283,7 @@
         }
       ],
       "mood": "calm",
-      "camera": "static",
+      "camera": "pulse",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night with soft glow"
     },
     {
@@ -309,7 +309,7 @@
         }
       ],
       "mood": "night",
-      "camera": "static",
+      "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night"
     },
     {

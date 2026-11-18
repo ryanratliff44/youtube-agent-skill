@@ -10,7 +10,11 @@ import itertools
 
 from common import episode_dir, read_json, write_json
 
-MOTIONS = ["zoom-in", "pan-left", "zoom-out", "pan-right"]
+MOTIONS = ["punch", "pulse", "punch-out", "pulse"]  # default: quick zooms, varied shot to shot
+CAMERA = {  # shotlist "camera" value -> editor motion
+    "punch in": "punch", "punch out": "punch-out", "pulse": "pulse",
+    "slow push in": "zoom-in", "pull out": "zoom-out", "pan left": "pan-left", "pan right": "pan-right",
+}
 FLOOR_Y = 0.80  # where characters' feet stand (fraction of frame height)
 EXPR_ANIM = {"asleep": "sway", "worried": "shake", "surprised": "hop", "angry": "bob"}
 
@@ -31,6 +35,7 @@ def build_actors(shot: dict) -> list[dict]:
             "scale": a.get("scale", 1.0 if n <= 2 else 0.85),
             "flip": a.get("flip", i >= n / 2 and n > 1),
             "anim": a.get("anim", EXPR_ANIM.get(expr, "bob")),
+            "glow": a.get("glow", a["char"] == "jesus"),
         })
     return out
 VIDEO_EXT = (".mp4", ".webm", ".mov")
@@ -78,7 +83,7 @@ def main() -> None:
             timeline.append({
                 "id": shot["id"], "src": src, "type": kind,
                 "start": round(start + j * step, 3), "end": round(start + (j + 1) * step, 3),
-                "motion": next(motion), "text": shot.get("onscreen_text", ""),
+                "motion": CAMERA.get(str(shot.get("camera", "")).lower()) or next(motion), "text": shot.get("onscreen_text", ""),
                 "actors": actors, "mood": shot.get("mood"),
             })
 
