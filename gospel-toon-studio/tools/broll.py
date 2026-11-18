@@ -125,6 +125,7 @@ def main() -> None:
     ap.add_argument("episode")
     ap.add_argument("--mode", choices=["still", "video"], default="still",
                     help="still = background picture for the layered cartoon look (default); video = AI video clip")
+    ap.add_argument("--skip-existing", action="store_true", help="do not remake pictures that already exist")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-smooth", action="store_true", help="skip frame interpolation")
     ap.add_argument("--fps", type=int, default=32, help="smoothed frame rate")
@@ -141,6 +142,9 @@ def main() -> None:
     if args.only:
         wanted = set(args.only.split(","))
         shots = [s for s in shots if s["id"] in wanted]
+    if args.skip_existing:
+        shots = [x for x in shots if not any((ep / "broll" / f"{x['id']}{e}").exists() for e in (".png", ".jpg", ".mp4"))]
+        print(f"{len(shots)} shots to make")
     prefix, negative = style_prompts()
     if args.mode == "still":
         prefix, negative = background_prompts()
