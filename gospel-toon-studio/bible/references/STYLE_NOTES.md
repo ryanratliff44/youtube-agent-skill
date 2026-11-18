@@ -95,3 +95,20 @@ We learn the *style*. We never copy Ricks Clips' characters, backgrounds or scri
 - Auto angle cuts: `tools/build_timeline.py` splits every scene into quick camera angles (0.8 s in the first
   3 s, 1.6 s after): wide, face close-up, medium, second face. `--hook-shot` and `--max-shot` change this.
 - Characters stay put while the camera moves, like the reference. Captions sit at about 67-70% height.
+
+## Second clip, 34 s (same channel, same video, longer cut): what it adds
+- **Story shape:** deadpan hook line -> the problem, with characters talking to each other -> a long
+  cinematic stretch **explaining how the thing works** with no characters at all (tight macro shots of the
+  mechanism, speed ramps, bursts of light) -> a dry punchline with one character smirking in front of the
+  explosion. About half the runtime is "explainer" shots with no characters.
+- **Scene changes use short dissolves (~0.2-0.5 s);** angle changes inside a scene are hard cuts.
+- **Mood changes through the story:** rainy night with warm lanterns -> golden sunset -> bright day.
+  Haze, glow and bloom on light sources; saturated, high-contrast color.
+- **Several characters per shot** (2-4, crowds of dozens) with a different expression on each; the speaker's
+  face changes every word (mouth open/closed, brows) so he looks like he is talking.
+- **Captions** again one word at a time at ~70% height, sentence punctuation kept ("umbrella.", "rocket.").
+- **Sound level** again steady (-15 to -21 dB, no drops): one constant bed under narration.
+
+## Studio changes from this clip
+- New scenes now dissolve in (0.2 s); angle changes stay hard cuts. (editor)
+- Next: mouth-flap talking animation, a no-character "explainer" scene type, and a music bed.

@@ -149,10 +149,11 @@ const cameraTransform = (motion: string, frame: number, frames: number): string 
 	}
 };
 
-const Moving: React.FC<{shot: Shot; frames: number}> = ({shot, frames}) => {
+const Moving: React.FC<{shot: Shot; frames: number; lead: number}> = ({shot, frames, lead}) => {
 	const frame = useCurrentFrame();
 	const {width: W, height: H} = useVideoConfig();
-	const fade = shot.cont ? 1 : interpolate(frame, [0, 2], [0.65, 1], {extrapolateRight: 'clamp'});
+	// New scene: a quick dissolve over the previous one (lead frames). New angle of the same scene: hard cut.
+	const fade = lead > 0 ? interpolate(frame, [0, lead], [0, 1], {extrapolateRight: 'clamp'}) : 1;
 	// Camera angle for this shot: keep the focus point centered, never showing past the picture's edges.
 	const fs = shot.focus ? Math.max(1, shot.focus.s) : 1;
 	const lim = (fs - 1) / (2 * fs);
@@ -163,7 +164,7 @@ const Moving: React.FC<{shot: Shot; frames: number}> = ({shot, frames}) => {
 	return (
 		<AbsoluteFill style={{opacity: fade, overflow: 'hidden', backgroundColor: INK}}>
 			<AbsoluteFill style={{transform: angle}}>
-			<AbsoluteFill style={{transform: cameraTransform(shot.motion, frame, frames), transformOrigin: '50% 58%'}}>
+			<AbsoluteFill style={{transform: cameraTransform(shot.motion, Math.max(0, frame - lead), frames), transformOrigin: '50% 58%'}}>
 				{shot.type === 'scene' && !shot.src ? (
 					<AbsoluteFill style={{background: 'linear-gradient(180deg, #7fb6e6 0%, #cfe3f3 55%, #8fae6a 56%, #5f7f45 100%)'}} />
 				) : shot.type === 'video' && shot.src ? (
@@ -219,11 +220,12 @@ export const Episode: React.FC<Timeline> = (t) => {
 	const f = (s: number) => Math.round(s * fps);
 	return (
 		<AbsoluteFill style={{backgroundColor: INK}}>
-			{t.shots.map((shot) => {
+			{t.shots.map((shot, i) => {
+				const lead = !shot.cont && i > 0 ? 6 : 0; // 0.2 s dissolve into a new scene
 				const frames = Math.max(1, f(shot.end) - f(shot.start));
 				return (
-					<Sequence key={shot.id} from={f(shot.start)} durationInFrames={frames} name={shot.id}>
-						<Moving shot={shot} frames={frames} />
+					<Sequence key={shot.id} from={f(shot.start) - lead} durationInFrames={frames + lead} name={shot.id}>
+						<Moving shot={shot} frames={frames} lead={lead} />
 					</Sequence>
 				);
 			})}
