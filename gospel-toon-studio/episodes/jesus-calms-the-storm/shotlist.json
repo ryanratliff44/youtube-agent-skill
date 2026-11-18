@@ -11,14 +11,19 @@
         {
           "char": "jesus",
           "emotion": "sleep",
-          "x": 0.5,
-          "scale": 1.05
+          "scale": 1.05,
+          "at": [
+            -2.4,
+            0
+          ]
         }
       ],
       "mood": "storm",
       "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, huge storm waves towering behind, dark thunderclouds and lightning at night",
-      "speaker": "jesus"
+      "speaker": "jesus",
+      "world": "storm_night",
+      "cam": "push_in"
     },
     {
       "id": "s01b",
@@ -31,14 +36,15 @@
         {
           "char": "peter",
           "emotion": "panic",
-          "x": 0.5,
           "scale": 1.15
         }
       ],
       "mood": "storm",
       "camera": "whip",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain streaking, dark stormy night sky with lightning flash",
-      "speaker": "peter"
+      "speaker": "peter",
+      "world": "storm_night",
+      "cam": "low_hero"
     },
     {
       "id": "s02",
@@ -49,7 +55,9 @@
       "mood": "dusk",
       "camera": "pan right",
       "prompt": "Sea of Galilee at sunset, calm golden water, green hills on the far shore, a wooden fishing boat sitting low in the shallow water at the shore with its hull resting in the water, wet pebble beach in the foreground",
-      "onscreen_text": "Mark 4:35-41"
+      "onscreen_text": "Mark 4:35-41",
+      "world": "dusk_shore",
+      "cam": "wide"
     },
     {
       "id": "s03",
@@ -63,27 +71,29 @@
       "actors": [
         {
           "char": "jesus",
-          "emotion": "calm",
-          "x": 0.3
+          "emotion": "calm"
         },
         {
           "char": "peter",
           "emotion": "joy",
-          "x": 0.1,
           "move": {
-            "x": 0.52
+            "at": [
+              0.06000000000000005,
+              0.3
+            ]
           }
         },
         {
           "char": "john",
-          "emotion": "neutral",
-          "x": 0.8
+          "emotion": "neutral"
         }
       ],
       "mood": "dusk",
       "camera": "handheld",
       "prompt": "empty pebble beach at dusk at the edge of a calm lake, a wooden fishing boat sitting low in the shallow water with its hull resting in the water and touching the shore, a rope lying on the wet pebbles, warm orange sky",
-      "speaker": "jesus"
+      "speaker": "jesus",
+      "world": "dusk_shore",
+      "cam": "orbit"
     },
     {
       "id": "s04",
@@ -96,14 +106,15 @@
         {
           "char": "peter",
           "emotion": "fear",
-          "x": 0.5,
           "scale": 1.1
         }
       ],
       "mood": "storm",
       "camera": "dutch",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, violent storm with huge waves crashing over the side, dark night",
-      "speaker": "peter"
+      "speaker": "peter",
+      "world": "storm_night",
+      "cam": "dutch"
     },
     {
       "id": "s04b",
@@ -116,14 +127,15 @@
         {
           "char": "john",
           "emotion": "panic",
-          "x": 0.5,
           "scale": 1.1
         }
       ],
       "mood": "storm",
       "camera": "handheld",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, water sloshing on deck, rain and spray, stormy night",
-      "speaker": "john"
+      "speaker": "john",
+      "world": "storm_night",
+      "cam": "close"
     },
     {
       "id": "s05",
@@ -136,14 +148,19 @@
         {
           "char": "jesus",
           "emotion": "sleep",
-          "x": 0.5,
-          "scale": 1.15
+          "scale": 1.15,
+          "at": [
+            -2.4,
+            0
+          ]
         }
       ],
       "mood": "storm",
       "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain falling, dim lantern light, stormy night",
-      "speaker": "jesus"
+      "speaker": "jesus",
+      "world": "storm_night",
+      "cam": "push_in"
     },
     {
       "id": "s06",
@@ -157,21 +174,32 @@
         {
           "char": "peter",
           "emotion": "panic",
-          "x": 0.1,
           "move": {
-            "x": 0.34
-          }
+            "at": [
+              -0.48,
+              0.3
+            ]
+          },
+          "at": [
+            -0.6,
+            0.4
+          ]
         },
         {
           "char": "jesus",
           "emotion": "sleep",
-          "x": 0.68
+          "at": [
+            -2.4,
+            0
+          ]
         }
       ],
       "mood": "storm",
       "camera": "handheld",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, stormy night with spray, lantern swinging",
-      "speaker": "peter"
+      "speaker": "peter",
+      "world": "storm_night",
+      "cam": "whip"
     },
     {
       "id": "s06b",
@@ -184,14 +212,15 @@
         {
           "char": "peter",
           "emotion": "anger",
-          "x": 0.5,
           "scale": 1.15
         }
       ],
       "mood": "storm",
       "camera": "whip",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain and spray flying, dark stormy blue light",
-      "speaker": "peter"
+      "speaker": "peter",
+      "world": "storm_night",
+      "cam": "low_hero"
     },
     {
       "id": "s07",
@@ -204,14 +233,15 @@
         {
           "char": "jesus",
           "emotion": "command",
-          "x": 0.5,
           "scale": 1.1
         }
       ],
       "mood": "storm",
       "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, wind howling, huge dark clouds above rough sea, one ray of light breaking through",
-      "speaker": "jesus"
+      "speaker": "jesus",
+      "world": "storm_night",
+      "cam": "low_hero"
     },
     {
       "id": "s07b",
@@ -224,18 +254,18 @@
       "actors": [
         {
           "char": "peter",
-          "emotion": "awe",
-          "x": 0.35
+          "emotion": "awe"
         },
         {
           "char": "john",
-          "emotion": "awe",
-          "x": 0.68
+          "emotion": "awe"
         }
       ],
       "mood": "calm",
       "camera": "pulse",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, the wind suddenly still, water droplets hanging in the air, warm glow spreading over the sea"
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, the wind suddenly still, water droplets hanging in the air, warm glow spreading over the sea",
+      "world": "calm_night",
+      "cam": "close"
     },
     {
       "id": "s08",
@@ -245,7 +275,9 @@
       "actors": [],
       "mood": "night",
       "camera": "pull out",
-      "prompt": "the lake suddenly perfectly calm and glassy under clearing clouds and bright stars, moonlight on the water"
+      "prompt": "the lake suddenly perfectly calm and glassy under clearing clouds and bright stars, moonlight on the water",
+      "world": "calm_night",
+      "cam": "crane_up"
     },
     {
       "id": "s09",
@@ -258,19 +290,19 @@
       "actors": [
         {
           "char": "peter",
-          "emotion": "awe",
-          "x": 0.35
+          "emotion": "awe"
         },
         {
           "char": "john",
-          "emotion": "laugh",
-          "x": 0.68
+          "emotion": "laugh"
         }
       ],
       "mood": "night",
       "camera": "handheld",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night",
-      "speaker": "peter"
+      "speaker": "peter",
+      "world": "calm_night",
+      "cam": "wide"
     },
     {
       "id": "s09b",
@@ -283,14 +315,15 @@
         {
           "char": "jesus",
           "emotion": "joy",
-          "x": 0.5,
           "scale": 1.1
         }
       ],
       "mood": "calm",
       "camera": "punch in",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night with soft glow",
-      "speaker": "jesus"
+      "speaker": "jesus",
+      "world": "calm_night",
+      "cam": "push_in"
     },
     {
       "id": "s09c",
@@ -303,19 +336,19 @@
       "actors": [
         {
           "char": "peter",
-          "emotion": "smug",
-          "x": 0.35
+          "emotion": "smug"
         },
         {
           "char": "john",
-          "emotion": "awe",
-          "x": 0.68
+          "emotion": "awe"
         }
       ],
       "mood": "night",
       "camera": "whip",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night",
-      "speaker": "john"
+      "speaker": "john",
+      "world": "calm_night",
+      "cam": "orbit"
     },
     {
       "id": "s10",
@@ -328,7 +361,6 @@
         {
           "char": "jesus",
           "emotion": "calm",
-          "x": 0.5,
           "scale": 1.05
         }
       ],
@@ -336,7 +368,9 @@
       "camera": "pull out",
       "prompt": "calm moonlit lake with distant shore lights, stars reflected in the water, a wooden fishing boat deck in the foreground with a warm lantern",
       "onscreen_text": "Mark 4:35-41",
-      "speaker": "jesus"
+      "speaker": "jesus",
+      "world": "calm_night",
+      "cam": "pull_back"
     }
   ]
 }

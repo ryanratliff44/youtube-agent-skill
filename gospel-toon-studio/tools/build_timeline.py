@@ -51,6 +51,21 @@ EXPR_TO_EMOTION = {"neutral": "neutral", "calm": "calm", "smile": "joy", "worrie
 EMOTIONS = ["neutral", "calm", "joy", "laugh", "fear", "panic", "anger", "sad", "awe", "sleep", "smug", "command"]
 
 
+WORLD_STAGE = {  # default standing spots (x along the boat/shore, z across) by number of actors
+    "boat": {1: [[-0.5, 0]], 2: [[-1.2, 0], [0.5, 0.3]], 3: [[-1.6, 0], [-0.2, 0.3], [1.2, -0.2]]},
+    "shore": {1: [[0, 0.3]], 2: [[-0.9, 0.3], [0.9, 0.5]], 3: [[-1.5, 0.5], [0, 0.2], [1.4, 0.6]]},
+}
+CAM_CYCLE = ["wide", "push_in", "low_hero", "close", "orbit", "whip", "crane_up", "dutch", "pull_back", "over_water"]
+
+
+def place_in_world(actors: list[dict], world: str) -> None:
+    kind = "shore" if world == "dusk_shore" else "boat"
+    spots = WORLD_STAGE[kind].get(min(len(actors), 3), [])
+    for i, a in enumerate(actors):
+        if a.get("at") is None and i < len(spots):
+            a["at"] = spots[i]
+
+
 def build_actors(shot: dict) -> list[dict]:
     """Turn a shot's actors (or its plain characters list) into editor actors with sensible defaults.
 
@@ -76,8 +91,9 @@ def build_actors(shot: dict) -> list[dict]:
             "glow": a.get("glow", a["char"] == "jesus"),
             "speak": a.get("speak", (a["char"] == speaker) if speaker else i == 0),
         }
-        if a.get("move"):
-            actor["move"] = a["move"]
+        for k in ("at", "lift", "move"):
+            if a.get(k) is not None:
+                actor[k] = a[k]
         out.append(actor)
     return out
 
@@ -138,6 +154,10 @@ def main() -> None:
                 pieces.append((round(cur, 3), round(nxt, 3)))
                 cur = nxt
             angs = angles(actors, len(pieces))
+            world = shot.get("world")
+            if world:
+                place_in_world(actors, world)
+                first = CAM_CYCLE.index(shot["cam"]) if shot.get("cam") in CAM_CYCLE else 0
             for k, (a0, a1) in enumerate(pieces):
                 timeline.append({
                     "id": shot["id"] if k == 0 else f"{shot['id']}.{k}", "src": src, "type": kind,
@@ -145,7 +165,8 @@ def main() -> None:
                     "motion": motion_main if k == 0 else ("punch", "pulse", "handheld", "whip")[k % 4],
                     "text": shot.get("onscreen_text", "") if k == 0 else "",
                     "actors": actors, "mood": shot.get("mood"),
-                    "focus": angs[k], "cont": k > 0,
+                    "focus": None if world else angs[k], "cont": k > 0,
+                    **({"world": world, "cam": CAM_CYCLE[(first + k * 3) % len(CAM_CYCLE)] if len(pieces) > 1 and k > 0 else shot.get("cam", "wide")} if world else {}),
                 })
 
     total = seg["duration"] + args.outro

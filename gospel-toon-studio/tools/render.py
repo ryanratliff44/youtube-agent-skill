@@ -34,6 +34,7 @@ def main() -> None:
     if not (STUDIO / "editor" / "node_modules").exists():
         run([shutil.which("npm") or "npm", "install", "--no-audit", "--no-fund"])
     common = ["--props", str(timeline), "--public-dir", str(ep)]
+    common += ["--gl", os.environ.get("REMOTION_GL", "angle")]  # needed for 3D scenes
     browser = os.environ.get("REMOTION_BROWSER")  # path to chrome.exe: use your own Chrome instead of downloading one
     if browser:
         common += ["--browser-executable", browser, "--chrome-mode", "chrome-for-testing"]
