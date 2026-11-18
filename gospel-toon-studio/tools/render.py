@@ -6,10 +6,11 @@ python tools/render.py episodes/<slug> [--thumb-frame 15]
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 
-from common import STUDIO, episode_dir
+from common import STUDIO, episode_dir, load_env
 
 
 def run(cmd: list[str]) -> None:
@@ -23,6 +24,7 @@ def main() -> None:
     ap.add_argument("--thumb-frame", type=int, default=15)
     ap.add_argument("--preview", type=float, default=0, help="render only the first N seconds, half size, to preview.mp4")
     args = ap.parse_args()
+    load_env()
 
     ep = episode_dir(args.episode)
     timeline = ep / "timeline.json"
@@ -36,6 +38,9 @@ def main() -> None:
     if not (STUDIO / "editor" / "node_modules").exists():
         run([shutil.which("npm") or "npm", "install", "--no-audit", "--no-fund"])
     common = ["--props", str(timeline), "--public-dir", str(ep)]
+    browser = os.environ.get("REMOTION_BROWSER")  # path to chrome.exe: use your own Chrome instead of downloading one
+    if browser:
+        common += ["--browser-executable", browser, "--chrome-mode", "chrome-for-testing"]
     if args.preview:
         last = int(args.preview * 30) - 1
         out = ep / "preview.mp4"
