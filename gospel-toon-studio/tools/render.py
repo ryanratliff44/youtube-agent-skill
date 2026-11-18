@@ -21,6 +21,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
     ap.add_argument("--thumb-frame", type=int, default=15)
+    ap.add_argument("--preview", type=float, default=0, help="render only the first N seconds, half size, to preview.mp4")
     args = ap.parse_args()
 
     ep = episode_dir(args.episode)
@@ -35,6 +36,12 @@ def main() -> None:
     if not (STUDIO / "editor" / "node_modules").exists():
         run([shutil.which("npm") or "npm", "install", "--no-audit", "--no-fund"])
     common = ["--props", str(timeline), "--public-dir", str(ep)]
+    if args.preview:
+        last = int(args.preview * 30) - 1
+        out = ep / "preview.mp4"
+        run([npx, "remotion", "render", "src/index.ts", "Episode", str(out), *common, "--codec", "h264", f"--frames=0-{last}", "--scale", "0.5"])
+        print(out)
+        return
     run([npx, "remotion", "render", "src/index.ts", "Episode", str(ep / "final.mp4"), *common, "--codec", "h264"])
     run([npx, "remotion", "still", "src/index.ts", "Episode", str(ep / "thumbnail.png"), *common, "--frame", str(args.thumb_frame)])
     print(ep / "final.mp4")
