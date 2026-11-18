@@ -7,6 +7,7 @@ These notes override the defaults in CHANNEL_BIBLE.md where they differ.
 |---|---|---|---|
 | ★ favorite | "The Window That Breaks Japan's Gambling Law" (youtube.com/shorts/eQR3pgMiUF0) | Ricks Clips | **Primary style target** |
 | ★ favorite | "Levels of Pirate Cannonballs" (youtube.com/shorts/lnYLIWP2l-I) | Ricks Clips | **Primary style target** |
+| ★ favorite | "How One Cart Stopped an Entire Army" (youtube.com/shorts/i4hYq1oSXTg) | Ricks Clips | Same style, clearest example |
 | secondary | "Kicked Off The Bus" (youtu.be/tmIE38_v3r0) | brewstewfilms | Flat, crude 2D, 16:9 sketch comedy |
 | secondary | "College Party Problems" (youtu.be/kLxH4Swrk8c) | Guad | Cartoon mixed with real meme clips |
 
@@ -57,3 +58,15 @@ We learn the *style*. We never copy Ricks Clips' characters, backgrounds or scri
 ## From the secondary references
 - *Kicked Off The Bus*: crude flat 2D in 16:9 and slow. Not for us, except a bold title card for long-form.
 - *College Party Problems*: mixes in real-world meme clips. **Don't use** (copyright, and it clashes with the tone).
+
+## Key finding: how the favorites are really made (from "How One Cart Stopped an Entire Army")
+- **Two layers.** Flat 2D "bean" characters (round head, dot eyes, stick limbs, one solid-color body,
+  hats/armor as the identifier) are placed over **real-time 3D-rendered environments** (game-engine look:
+  realistic grass, stone walls, volumetric light, sky, mountains). It is NOT one AI-generated video.
+- The characters barely animate: slides, bobs, head turns, blinks. The camera and cuts carry the motion.
+  Crowd shots repeat the same character many times. Banners and props identify factions.
+- Captions: one or two words at a time, white with black outline, lower-middle of frame.
+- **What this means for us:** a text-to-video model will not match this. The reliable way to match it is a
+  layered pipeline: (1) one still background image per scene, (2) a small set of consistent 2D character
+  sprites, (3) simple motion in the editor (slide, bob, zoom, parallax). It is also much faster and
+  fluid, and characters stay identical in every shot.
