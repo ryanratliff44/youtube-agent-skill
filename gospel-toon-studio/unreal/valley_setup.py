@@ -1,7 +1,7 @@
 """Run inside Unreal Editor (Python Editor Script Plugin):  py "C:/Users/<you>/youtube-agent-skill/gospel-toon-studio/unreal/valley_setup.py"
 
-Turns the open level into a golden-dawn valley for David and Goliath and makes a vertical (9:16) film camera
-exactly where your view is right now. Fly your view to the shot you want FIRST, then run this.
+Turns the open level into a golden-dawn valley for David and Goliath, puts a vertical (9:16) film camera on the
+ground at head height and switches the view to look through it. No flying needed.
 Every step is reported in the Output Log; a step that fails is skipped, the rest still run.
 """
 
@@ -90,9 +90,33 @@ def grade():
     p.set_editor_property("settings", s)
 
 
-# 5. A vertical 9:16 film camera exactly at your current view
+# 5. A vertical 9:16 film camera standing on the ground at head height, looking across the valley.
+#    It finds the ground by itself, so you don't have to fly anywhere. Then the view switches to it.
+def ground_z(x, y):
+    world = ues.get_editor_world()
+    try:
+        hit = unreal.SystemLibrary.line_trace_single(world, unreal.Vector(x, y, 500000), unreal.Vector(x, y, -500000),
+                                                     unreal.TraceTypeQuery.TRACE_TYPE_QUERY1, False, [], unreal.DrawDebugTrace.NONE, True)
+        if isinstance(hit, tuple):
+            hit = next((h for h in hit if isinstance(h, unreal.HitResult)), None)
+        if hit:
+            t = hit.to_tuple()
+            for v in t:
+                if isinstance(v, unreal.Vector) and abs(v.z) < 400000:
+                    return v.z
+    except Exception as e:
+        unreal.log_warning(f"[GospelToon]      (ground trace failed: {e})")
+    return None
+
+
 def camera():
-    loc, rot = ues.get_level_viewport_camera_info()
+    z = ground_z(0.0, 0.0)
+    if z is None:
+        loc, rot = ues.get_level_viewport_camera_info()  # fall back to wherever the view is now
+        log("[GospelToon]      ground not found; using your current view")
+    else:
+        loc = unreal.Vector(0.0, 0.0, z + 170.0)  # 1.7 m above the ground, like a person's eyes
+        rot = unreal.Rotator(0.0, 3.0, 0.0)  # roll, pitch (slightly up), yaw
     cam = eas.spawn_actor_from_class(unreal.CineCameraActor, loc, rot)
     n = len([a for a in actors_of(unreal.CineCameraActor) if a.get_actor_label().startswith("GT_Cam")])
     cam.set_actor_label(f"GT_Cam_{n:02d}")
@@ -102,10 +126,14 @@ def camera():
     fb.sensor_height = 23.76
     cc.set_editor_property("filmback", fb)
     cc.set_editor_property("current_focal_length", 18.0)
+    try:
+        unreal.get_editor_subsystem(unreal.LevelEditorSubsystem).pilot_level_actor(cam)  # look through it
+    except Exception as e:
+        unreal.log_warning(f"[GospelToon]      (could not switch the view to the camera: {e})")
     log(f"[GospelToon]      camera {cam.get_actor_label()} at {loc}")
 
 
-for name, fn in [("golden dawn sun", sun), ("morning haze", fog), ("sky light", skylight), ("cinematic grade", grade), ("9:16 camera at your view", camera)]:
+for name, fn in [("golden dawn sun", sun), ("morning haze", fog), ("sky light", skylight), ("cinematic grade", grade), ("9:16 camera on the ground", camera)]:
     step(name, fn)
 
 unreal.EditorLoadingAndSavingUtils.save_dirty_packages(True, True)
