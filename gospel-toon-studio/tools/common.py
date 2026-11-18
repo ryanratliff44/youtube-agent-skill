@@ -16,7 +16,7 @@ def load_env() -> None:
     env = STUDIO / ".env"
     if not env.exists():
         return
-    for line in env.read_text().splitlines():
+    for line in env.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
@@ -38,15 +38,15 @@ def read_json(path: Path, default=None):
         if default is not None:
             return default
         raise SystemExit(f"Missing {path}")
-    return json.loads(path.read_text())
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def write_json(path: Path, data) -> None:
-    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def beats(episode: Path) -> list[str]:
-    text = (episode / "narration.txt").read_text().strip()
+    text = (episode / "narration.txt").read_text(encoding="utf-8").strip()
     return [" ".join(p.split()) for p in re.split(r"\n\s*\n", text) if p.strip()]
 
 
@@ -64,7 +64,7 @@ def _blockquote_after(md: str, label: str) -> str:
 
 
 def style_prompts() -> tuple[str, str]:
-    md = (BIBLE / "CHANNEL_BIBLE.md").read_text()
+    md = (BIBLE / "CHANNEL_BIBLE.md").read_text(encoding="utf-8")
     return (
         _blockquote_after(md, "**Style prompt prefix**"),
         _blockquote_after(md, "**Negative prompt:**"),
@@ -75,4 +75,4 @@ def character_token(char_id: str) -> str:
     sheet = BIBLE / "characters" / f"{char_id}.md"
     if not sheet.exists():
         raise SystemExit(f"No character sheet for '{char_id}' (expected {sheet})")
-    return _blockquote_after(sheet.read_text(), "**Prompt token:**")
+    return _blockquote_after(sheet.read_text(encoding="utf-8"), "**Prompt token:**")

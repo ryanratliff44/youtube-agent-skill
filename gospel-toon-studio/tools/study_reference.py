@@ -55,13 +55,13 @@ def main() -> None:
             model = WhisperModel("small.en", device="cpu", compute_type="int8")
             segs = list(model.transcribe(str(video), language="en")[0])
             text = "\n".join(f"[{s.start:.1f}] {s.text.strip()}" for s in segs)
-            (out / "transcript.txt").write_text(text + "\n")
+            (out / "transcript.txt").write_text(text + "\n", encoding="utf-8")
             words = sum(len(s.text.split()) for s in segs)
             stats["words_per_minute"] = round(words / (duration / 60), 1)
         except Exception as e:  # transcript is optional
             stats["transcript_error"] = str(e)
 
-    (out / "stats.json").write_text(json.dumps(stats, indent=2) + "\n")
+    (out / "stats.json").write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
     print(f"{out}  ({len(cuts)} cuts, avg shot {stats['avg_shot_length_s']} s)")
 
 

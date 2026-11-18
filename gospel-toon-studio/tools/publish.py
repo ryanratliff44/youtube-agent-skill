@@ -72,7 +72,7 @@ def post_youtube(video: Path, c: dict, schedule: dt.datetime | None) -> dict:
             raise RuntimeError("YOUTUBE_CLIENT_SECRETS must point to your OAuth client JSON")
         creds = InstalledAppFlow.from_client_secrets_file(secrets, scopes).run_local_server(port=0)
         token.parent.mkdir(parents=True, exist_ok=True)
-        token.write_text(creds.to_json())
+        token.write_text(creds.to_json(), encoding="utf-8")
 
     status = {"privacyStatus": "public", "selfDeclaredMadeForKids": c["made_for_kids"]}
     if schedule:
