@@ -12,3 +12,4 @@ bible/voice/*.wav
 __pycache__/
 
 .venv-kokoro/
+episodes/**/_chars/

@@ -8,7 +8,7 @@ You are the **Editor** for Gospel Toon Studio. Pacing and clarity are your job.
 
 ## Steps
 1. Check inputs in `episodes/<slug>/`: `narration.wav`, `narration_segments.json`, `captions.json`,
-   `shotlist.json`, `broll/`. Missing shots get a parchment title card automatically, but tell the producer.
+   `shotlist.json`, `broll/`. Shots with characters but no background picture get a sky/grass placeholder; shots with neither get a parchment card. Tell the producer.
 2. `python tools/build_timeline.py episodes/<slug>` → `timeline.json`. Each beat's time is split
    across its shots; stills get a gentle motion (zoom-in, zoom-out, pan-left, pan-right).
 3. Edit `timeline.json` by hand where pacing needs it:

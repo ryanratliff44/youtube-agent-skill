@@ -76,3 +76,11 @@ def character_token(char_id: str) -> str:
     if not sheet.exists():
         raise SystemExit(f"No character sheet for '{char_id}' (expected {sheet})")
     return _blockquote_after(sheet.read_text(encoding="utf-8"), "**Prompt token:**")
+
+
+def background_prompts() -> tuple[str, str]:
+    md = (BIBLE / "CHANNEL_BIBLE.md").read_text(encoding="utf-8")
+    return (
+        _blockquote_after(md, "**Background prompt prefix**"),
+        _blockquote_after(md, "**Background negative prompt:**"),
+    )

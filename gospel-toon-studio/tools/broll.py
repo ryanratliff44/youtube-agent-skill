@@ -20,7 +20,7 @@ import urllib.parse
 import urllib.request
 import uuid
 
-from common import STUDIO, character_token, episode_dir, load_env, read_json, style_prompts
+from common import STUDIO, background_prompts, character_token, episode_dir, load_env, read_json, style_prompts
 
 CAMERA_HINTS = {
     "slow push in": "slow cinematic dolly in",
@@ -38,6 +38,18 @@ def build_prompt(shot: dict, prefix: str) -> str:
 
 
 CJK = re.compile(r"[\u4e00-\u9fff]")
+
+
+def build_background_prompt(shot: dict, prefix: str) -> str:
+    camera = CAMERA_HINTS.get(shot.get("camera", "").lower(), "")
+    text = shot.get("background") or shot["prompt"]
+    return ". ".join(p for p in [prefix, text] if p)
+
+
+def extract_still(video: str, png: str, w: int = 1080, h: int = 1920) -> None:
+    """Take the first frame of a 1-frame clip and upscale it to full video size."""
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", video, "-frames:v", "1", "-vf",
+                    f"scale={w}:{h}:flags=lanczos:force_original_aspect_ratio=increase,crop={w}:{h}", png], check=True)
 
 
 def fill_workflow(wf: dict, positive: str, negative: str, seed: int, frames: int, w: int, h: int) -> dict:
@@ -111,6 +123,8 @@ def main() -> None:
     load_env()
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
+    ap.add_argument("--mode", choices=["still", "video"], default="still",
+                    help="still = background picture for the layered cartoon look (default); video = AI video clip")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-smooth", action="store_true", help="skip frame interpolation")
     ap.add_argument("--fps", type=int, default=32, help="smoothed frame rate")
@@ -128,11 +142,14 @@ def main() -> None:
         wanted = set(args.only.split(","))
         shots = [s for s in shots if s["id"] in wanted]
     prefix, negative = style_prompts()
+    if args.mode == "still":
+        prefix, negative = background_prompts()
+        args.frames = 1
     url = os.environ.get("COMFYUI_URL", "http://127.0.0.1:8000").rstrip("/")
 
     if args.dry_run:
         for s in shots:
-            print(f"--- {s['id']} (beat {s['beat']})\n{build_prompt(s, prefix)}\n")
+            print(f"--- {s['id']} (beat {s['beat']})\n{build_background_prompt(s, prefix) if args.mode == 'still' else build_prompt(s, prefix)}\n")
         print(f"NEGATIVE: {negative}")
         return
 
@@ -143,10 +160,16 @@ def main() -> None:
     failed = []
     for i, s in enumerate(shots):
         seed = args.seed if args.seed is not None else int(time.time()) + i
-        wf = fill_workflow(base_wf, build_prompt(s, prefix), negative, seed, args.frames, args.width, args.height)
+        wf = fill_workflow(base_wf, build_background_prompt(s, prefix) if args.mode == 'still' else build_prompt(s, prefix), negative, seed, args.frames, args.width, args.height)
         print(f"{s['id']}: generating (seed {seed}) ...", flush=True)
         try:
             out = run_shot(url, wf, str(ep / 'broll' / s['id']))
+            if args.mode == 'still':
+                png = str(ep / 'broll' / f"{s['id']}.png")
+                extract_still(out, png)
+                os.remove(out)
+                print(f"{s['id']}: {png}")
+                continue
             if not args.no_smooth and out.endswith('.mp4'):
                 smooth(out, args.fps)
             print(f"{s['id']}: {out}")

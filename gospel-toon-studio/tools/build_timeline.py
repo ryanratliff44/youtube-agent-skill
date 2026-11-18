@@ -11,6 +11,28 @@ import itertools
 from common import episode_dir, read_json, write_json
 
 MOTIONS = ["zoom-in", "pan-left", "zoom-out", "pan-right"]
+FLOOR_Y = 0.80  # where characters' feet stand (fraction of frame height)
+EXPR_ANIM = {"asleep": "sway", "worried": "shake", "surprised": "hop", "angry": "bob"}
+
+
+def build_actors(shot: dict) -> list[dict]:
+    """Turn a shot's actors (or its plain characters list) into editor actors with sensible defaults."""
+    raw = shot.get("actors")
+    if raw is None:
+        raw = [{"char": c} for c in shot.get("characters", [])]
+    n = len(raw)
+    out = []
+    for i, a in enumerate(raw):
+        expr = a.get("expr", "neutral")
+        out.append({
+            "src": f"_chars/{a['char']}_{expr}.svg",
+            "x": a.get("x", (i + 1) / (n + 1)),
+            "y": a.get("y", FLOOR_Y),
+            "scale": a.get("scale", 1.0 if n <= 2 else 0.85),
+            "flip": a.get("flip", i >= n / 2 and n > 1),
+            "anim": a.get("anim", EXPR_ANIM.get(expr, "bob")),
+        })
+    return out
 VIDEO_EXT = (".mp4", ".webm", ".mov")
 IMAGE_EXT = (".png", ".jpg", ".jpeg", ".webp")
 
@@ -45,12 +67,19 @@ def main() -> None:
         step = (end - start) / len(beat_shots)
         for j, shot in enumerate(beat_shots):
             src, kind = find_media(ep, shot["id"])
-            if kind == "card":
+            actors = build_actors(shot)
+            if kind == "card" and actors:
+                kind = "scene"  # no background picture yet: sky/grass placeholder behind the characters
+                missing.append(shot["id"])
+            elif kind in ("image", "video") and actors:
+                kind = "scene" if kind == "image" else kind
+            elif kind == "card":
                 missing.append(shot["id"])
             timeline.append({
                 "id": shot["id"], "src": src, "type": kind,
                 "start": round(start + j * step, 3), "end": round(start + (j + 1) * step, 3),
                 "motion": next(motion), "text": shot.get("onscreen_text", ""),
+                "actors": actors, "mood": shot.get("mood"),
             })
 
     total = seg["duration"] + args.outro
@@ -66,7 +95,7 @@ def main() -> None:
     })
     print(f"timeline.json: {len(timeline)} shots, {total:.1f}s")
     if missing:
-        print(f"Missing B-roll (title card used): {', '.join(missing)}")
+        print(f"No background picture yet (placeholder used): {', '.join(missing)}")
 
 
 if __name__ == "__main__":

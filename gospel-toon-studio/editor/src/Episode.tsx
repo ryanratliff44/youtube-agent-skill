@@ -12,14 +12,25 @@ import {
 	useVideoConfig,
 } from 'remotion';
 
+export type Actor = {
+	src: string;
+	x: number; // 0..1 across the frame (center of the character)
+	y: number; // 0..1 down the frame (where the feet stand)
+	scale: number;
+	flip: boolean;
+	anim: 'none' | 'bob' | 'sway' | 'shake' | 'slide-in' | 'hop';
+};
+
 export type Shot = {
 	id: string;
 	src: string | null;
-	type: 'video' | 'image' | 'card';
+	type: 'video' | 'image' | 'card' | 'scene';
 	start: number;
 	end: number;
 	motion: 'zoom-in' | 'zoom-out' | 'pan-left' | 'pan-right';
 	text?: string;
+	actors?: Actor[];
+	mood?: 'day' | 'dusk' | 'night' | 'storm' | 'calm';
 };
 
 export type Timeline = {
@@ -62,6 +73,46 @@ const Card: React.FC<{title: string; subtitle?: string}> = ({title, subtitle}) =
 	);
 };
 
+const CHAR_H = 880; // sprite height in a 1920-tall frame at scale 1
+
+const ActorView: React.FC<{actor: Actor; index: number}> = ({actor, index}) => {
+	const frame = useCurrentFrame();
+	const {fps, width, height} = useVideoConfig();
+	const t = frame / fps + index * 0.37;
+	const pop = spring({frame: Math.max(0, frame - index * 4), fps, config: {damping: 14, stiffness: 140}, durationInFrames: 14});
+	let dx = 0;
+	let dy = 0;
+	let rot = 0;
+	if (actor.anim === 'bob') dy = Math.sin(t * 2 * Math.PI * 0.9) * 10;
+	if (actor.anim === 'sway') rot = Math.sin(t * 2 * Math.PI * 0.5) * 3.5;
+	if (actor.anim === 'hop') dy = -Math.abs(Math.sin(t * 2 * Math.PI * 1.2)) * 36;
+	if (actor.anim === 'shake') {
+		dx = Math.sin(t * 38) * 7;
+		dy = Math.sin(t * 29 + 1) * 6;
+		rot = Math.sin(t * 22) * 2.5;
+	}
+	if (actor.anim === 'slide-in') {
+		const k = spring({frame, fps, config: {damping: 18}, durationInFrames: 18});
+		dx = (actor.x < 0.5 ? -1 : 1) * (1 - k) * 520;
+	}
+	const h = CHAR_H * actor.scale;
+	const w = (h * 300) / 560;
+	return (
+		<div style={{position: 'absolute', left: actor.x * width - w / 2 + dx, top: actor.y * height - h + dy, width: w, height: h, transformOrigin: '50% 100%', transform: `scale(${0.85 + 0.15 * pop}) rotate(${rot}deg) scaleX(${actor.flip ? -1 : 1})`, opacity: pop}}>
+			<div style={{position: 'absolute', left: '12%', right: '12%', bottom: -h * 0.02, height: h * 0.05, borderRadius: '50%', background: 'rgba(0,0,0,0.28)', filter: 'blur(6px)'}} />
+			<Img src={staticFile(actor.src)} style={{width: '100%', height: '100%'}} />
+		</div>
+	);
+};
+
+const MOOD: Record<string, string> = {
+	day: 'rgba(255,214,140,0.10)',
+	dusk: 'rgba(255,140,80,0.18)',
+	night: 'rgba(20,30,80,0.38)',
+	storm: 'rgba(15,25,60,0.42)',
+	calm: 'rgba(120,160,255,0.12)',
+};
+
 const Moving: React.FC<{shot: Shot; frames: number}> = ({shot, frames}) => {
 	const frame = useCurrentFrame();
 	const p = interpolate(frame, [0, frames], [0, 1], {extrapolateRight: 'clamp'});
@@ -75,13 +126,19 @@ const Moving: React.FC<{shot: Shot; frames: number}> = ({shot, frames}) => {
 	const media = {width: '100%', height: '100%', objectFit: 'cover' as const, transform: t};
 	return (
 		<AbsoluteFill style={{opacity: fade, overflow: 'hidden', backgroundColor: INK}}>
-			{shot.type === 'video' && shot.src ? (
+			{shot.type === 'scene' && !shot.src ? (
+				<AbsoluteFill style={{background: 'linear-gradient(180deg, #7fb6e6 0%, #cfe3f3 55%, #8fae6a 56%, #5f7f45 100%)'}} />
+			) : shot.type === 'video' && shot.src ? (
 				<OffthreadVideo src={staticFile(shot.src)} muted style={{...media, transform: shot.motion.startsWith('zoom') ? t : 'scale(1.02)'}} />
-			) : shot.type === 'image' && shot.src ? (
+			) : (shot.type === 'image' || shot.type === 'scene') && shot.src ? (
 				<Img src={staticFile(shot.src)} style={media} />
 			) : (
 				<Card title={shot.text || shot.id} />
 			)}
+			{shot.mood ? <AbsoluteFill style={{background: MOOD[shot.mood], mixBlendMode: 'multiply'}} /> : null}
+			{(shot.actors || []).map((a, i) => (
+				<ActorView key={i} actor={a} index={i} />
+			))}
 			{shot.text && shot.type !== 'card' ? (
 				<div style={{position: 'absolute', top: 150, width: '100%', textAlign: 'center'}}>
 					<span style={{fontFamily: SERIF, fontSize: 46, color: PARCHMENT, background: 'rgba(59,42,26,0.72)', padding: '12px 28px', borderRadius: 14}}>{shot.text}</span>

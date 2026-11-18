@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 560" width="300" height="560">
+<defs><radialGradient id="g"><stop offset="0" stop-color="#fff3b0" stop-opacity=".75"/><stop offset="1" stop-color="#fff3b0" stop-opacity="0"/></radialGradient></defs><circle cx="150" cy="250" r="147" fill="url(#g)"/>
+<path d="M130 400 L126 530" stroke="#2b1b12" stroke-width="16" stroke-linecap="round" fill="none"/><path d="M170 400 L174 530" stroke="#2b1b12" stroke-width="16" stroke-linecap="round" fill="none"/>
+<ellipse cx="120" cy="540" rx="26" ry="12" fill="#3b2a1c" stroke="#2b1b12" stroke-width="6"/><ellipse cx="180" cy="540" rx="26" ry="12" fill="#3b2a1c" stroke="#2b1b12" stroke-width="6"/>
+<path d="M104 206 L58 322" stroke="#2b1b12" stroke-width="16" stroke-linecap="round" fill="none"/><path d="M196 206 L242 322" stroke="#2b1b12" stroke-width="16" stroke-linecap="round" fill="none"/>
+<circle cx="56" cy="328" r="14" fill="#d9a273" stroke="#2b1b12" stroke-width="6"/><circle cx="244" cy="328" r="14" fill="#d9a273" stroke="#2b1b12" stroke-width="6"/>
+<path d="M78 100 q-8 -66 72 -70 q80 4 72 70 l6 76 q-16 14 -34 6 l-4 -60 l-80 0 l-4 60 q-18 8 -34 -6z" fill="#5a3a22" stroke="#2b1b12" stroke-width="7" stroke-linejoin="round"/>
+<rect x="92" y="176" width="116" height="236" rx="58" fill="#f3ead8" stroke="#2b1b12" stroke-width="8"/>
+<rect x="96" y="268" width="108" height="26" fill="#3f6fb5" stroke="#2b1b12" stroke-width="6"/>
+<circle cx="150" cy="96" r="72" fill="#d9a273" stroke="#2b1b12" stroke-width="8"/>
+<path d="M96 118 q6 48 54 50 q48 -2 54 -50 q-20 22 -54 20 q-34 2 -54 -20z" fill="#5a3a22" stroke="#2b1b12" stroke-width="6" stroke-linejoin="round"/>
+<path d="M82 88 q4 -52 68 -54 q64 2 68 54 q-34 -28 -68 -22 q-34 -6 -68 22z" fill="#5a3a22" stroke="#2b1b12" stroke-width="6" stroke-linejoin="round"/>
+<circle cx="124" cy="92" r="7.5" fill="#2b1b12"/><circle cx="176" cy="92" r="7.5" fill="#2b1b12"/><path d="M112 76 q12 -5 24 0" stroke="#2b1b12" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M164 76 q12 -5 24 0" stroke="#2b1b12" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M138 122 l24 0" stroke="#f6dcc0" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>

@@ -7,7 +7,7 @@ stories, then posts them to TikTok, YouTube Shorts and Instagram Reels.
 |---|---|---|
 | **Scriptwriter** | Scripture-accurate script, shot list, titles, hashtags | Claude + KJV/WEB text |
 | **Narrator** | Warm voice-over in a consistent (optionally cloned) voice + word-timed captions | Chatterbox TTS, faster-whisper |
-| **B-roll Artist** | Cartoon clips for every shot in a fixed house style with consistent characters | Wan video on ComfyUI (WanVideoWrapper) |
+| **B-roll Artist** | Painted background picture for every scene (the characters are drawn once and reused) | Wan on ComfyUI (WanVideoWrapper) |
 | **Editor** | Cuts it together: motion, captions, scripture cards, music, thumbnail | Remotion |
 | **Publisher** | Platform-tailored captions and uploads; dry run first, posts only on your OK | tiktok-uploader, YouTube Data API, Instagram Graph API |
 

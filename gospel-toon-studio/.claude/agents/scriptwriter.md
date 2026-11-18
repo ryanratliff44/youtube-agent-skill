@@ -26,17 +26,21 @@ An episode folder `episodes/<slug>/` and a topic (e.g. "Jesus calms the storm").
 - `narration.txt` — narration only, one beat per paragraph, blank line between beats. No stage
   directions. Spell out numbers and tricky names phonetically only if the narrator needs it
   (put the phonetic hint in `script.md`, not here).
-- `shotlist.json`:
+- `shotlist.json` (layered scenes: a painted background plus flat 2D characters):
   ```json
   {"shots": [
-    {"id": "s01", "beat": 0, "characters": ["jesus", "peter"],
-     "prompt": "Jesus asleep on a cushion at the stern of a small wooden fishing boat, storm waves crashing, Peter shouting",
-     "camera": "slow push in", "onscreen_text": "Mark 4:35-41"}
+    {"id": "s01", "beat": 0,
+     "background": "empty wooden fishing boat deck at night, huge storm waves, lightning in dark clouds",
+     "actors": [{"char": "jesus", "expr": "asleep", "x": 0.5, "scale": 1.05, "anim": "sway"}],
+     "mood": "storm", "camera": "slow push in", "onscreen_text": "Mark 4:35-41"}
   ]}
   ```
-  `beat` is the 0-based paragraph index in `narration.txt`. Character ids must exist in
-  `bible/characters/`; if one doesn't, create its sheet (same format) and mention it.
-  Describe action and setting only; the B-roll artist adds the style and character tokens.
+  `beat` is the 0-based paragraph index in `narration.txt`; give each beat 2-4 shots.
+  `background` describes the place only (never people). `actors` list who is on screen:
+  `char` must exist in `assets/characters/` (jesus, peter, john, mary, crowd); `expr` is one of
+  neutral, smile, worried, surprised, asleep, angry, calm; optional `x` (0-1 across), `scale`, `flip`,
+  `anim` (none, bob, sway, shake, hop, slide-in). `mood` is day, dusk, night, storm or calm.
+  Use close-ups (one big actor), two-shots and empty establishing shots (no actors) for variety.
 - `metadata.json`:
   ```json
   {"title": "...", "description": "...(include the reference)...", "hashtags": ["#Jesus", "#Bible"],

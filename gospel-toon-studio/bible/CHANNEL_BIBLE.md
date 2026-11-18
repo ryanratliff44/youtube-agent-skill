@@ -45,6 +45,15 @@ Simple "bean people" characters in front of rich, painterly, moodily lit backgro
 > photorealistic, 3d render, anime, blurry, low quality, jittery, flickering, text, watermark, logo,
 > subtitles, gore, blood, modern clothing, modern buildings, cars, phones
 
+**Background prompt prefix** (scenes are built in layers: AI-painted background + flat 2D character sprites):
+> beautiful detailed painterly 3D game environment render, rich textures, depth, dramatic cinematic
+> lighting and atmosphere, first-century Judea, empty scene with no people and no characters, vertical
+> 9:16 composition
+
+**Background negative prompt:**
+> people, characters, faces, figures, text, watermark, logo, subtitles, modern buildings, cars, phones,
+> blurry, low quality, ugly
+
 - Aspect: 9:16 (1080×1920) for shorts.
 - Shots: alternate wide establishing shot → medium character shot → reaction close-up. Cut every 1.5–3 s.
 - Every scene has a lighting idea: golden sunset, lantern glow in a dark room, stormy blue night
