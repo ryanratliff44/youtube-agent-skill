@@ -40,10 +40,14 @@ def main() -> None:
         last = int(args.preview * 30) - 1
         out = ep / "preview.mp4"
         run([npx, "remotion", "render", "src/index.ts", "Episode", str(out), *common, "--codec", "h264", f"--frames=0-{last}", "--scale", "0.5"])
+        if not out.exists():
+            raise SystemExit("Remotion finished but wrote no video. Run the command shown above by hand in the editor folder to see the real error.")
         print(out)
         return
     run([npx, "remotion", "render", "src/index.ts", "Episode", str(ep / "final.mp4"), *common, "--codec", "h264"])
     run([npx, "remotion", "still", "src/index.ts", "Episode", str(ep / "thumbnail.png"), *common, "--frame", str(args.thumb_frame)])
+    if not (ep / "final.mp4").exists():
+        raise SystemExit("Remotion finished but wrote no video. Run the command shown above by hand in the editor folder to see the real error.")
     print(ep / "final.mp4")
 
 
