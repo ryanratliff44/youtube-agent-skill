@@ -1,0 +1,7 @@
+# Free alternative narrator voice (Kokoro). Install in its OWN environment, separate from the Chatterbox one:
+#   py -3.11 -m venv .venv-kokoro
+#   .venv-kokoro\Scripts\Activate.ps1
+#   python -m pip install -r requirements-kokoro.txt
+kokoro>=0.9.4
+soundfile
+numpy

@@ -1,0 +1,276 @@
+{
+  "shots": [
+    {
+      "id": "s01",
+      "at": "Bro",
+      "world": "storm_night",
+      "mood": "storm",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "sleep",
+          "at": [
+            -2.3,
+            0
+          ]
+        },
+        {
+          "char": "peter",
+          "emotion": "fear",
+          "at": [
+            -0.8,
+            0.35
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s02",
+      "at": "Evening on the Sea",
+      "world": "dusk_shore",
+      "mood": "dusk",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "calm"
+        },
+        {
+          "char": "peter",
+          "emotion": "neutral"
+        },
+        {
+          "char": "john",
+          "emotion": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "s03",
+      "at": "So they all hop",
+      "world": "calm_night",
+      "mood": "calm",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "calm",
+          "at": [
+            -2.0,
+            0.1
+          ]
+        },
+        {
+          "char": "peter",
+          "emotion": "warm",
+          "at": [
+            -0.8,
+            0.35
+          ]
+        },
+        {
+          "char": "john",
+          "emotion": "neutral",
+          "at": [
+            0.2,
+            0.1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s04",
+      "at": "Then the wind hits",
+      "world": "storm_night",
+      "mood": "storm",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "sleep",
+          "at": [
+            -2.3,
+            0
+          ]
+        },
+        {
+          "char": "peter",
+          "emotion": "fear",
+          "at": [
+            -0.9,
+            0.35
+          ]
+        },
+        {
+          "char": "john",
+          "emotion": "fear",
+          "at": [
+            0.2,
+            0.1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s05",
+      "at": "And Jesus is in",
+      "world": "storm_night",
+      "mood": "storm",
+      "cam": "close",
+      "focus": "jesus",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "sleep",
+          "at": [
+            -2.3,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s06",
+      "at": "Peter shakes him awake",
+      "world": "storm_night",
+      "mood": "storm",
+      "speaker": "peter",
+      "cam": "close",
+      "actors": [
+        {
+          "char": "peter",
+          "emotion": "panic",
+          "at": [
+            -1.2,
+            0.35
+          ]
+        },
+        {
+          "char": "jesus",
+          "emotion": "sleep",
+          "at": [
+            -2.3,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s07",
+      "at": "Jesus stands up",
+      "world": "storm_night",
+      "mood": "storm",
+      "speaker": "jesus",
+      "cam": "low_hero",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "command",
+          "at": [
+            -1.4,
+            0.1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s08",
+      "at": "And the wind just",
+      "world": "calm_night",
+      "mood": "calm",
+      "cam": "wide",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "calm",
+          "at": [
+            -2.0,
+            0.1
+          ]
+        },
+        {
+          "char": "peter",
+          "emotion": "awe",
+          "at": [
+            -0.7,
+            0.35
+          ]
+        },
+        {
+          "char": "john",
+          "emotion": "awe",
+          "at": [
+            0.3,
+            0.1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s09",
+      "at": "Why are ye so",
+      "world": "calm_night",
+      "mood": "calm",
+      "speaker": "jesus",
+      "cam": "medium",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "calm",
+          "at": [
+            -1.6,
+            0.1
+          ]
+        },
+        {
+          "char": "peter",
+          "emotion": "sad",
+          "at": [
+            -0.2,
+            0.35
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "at": "And the disciples are",
+      "world": "calm_night",
+      "mood": "calm",
+      "cam": "medium",
+      "actors": [
+        {
+          "char": "peter",
+          "emotion": "awe",
+          "at": [
+            -1.2,
+            0.3
+          ]
+        },
+        {
+          "char": "john",
+          "emotion": "awe",
+          "at": [
+            -0.1,
+            0.1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s11",
+      "at": "So whatever storm",
+      "world": "calm_night",
+      "mood": "calm",
+      "cam": "close",
+      "focus": "jesus",
+      "actors": [
+        {
+          "char": "jesus",
+          "emotion": "warm",
+          "at": [
+            -1.2,
+            0.1
+          ]
+        }
+      ]
+    }
+  ]
+}

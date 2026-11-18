@@ -1,0 +1,328 @@
+{
+  "shots": [
+    {
+      "id": "s01",
+      "at": "Bro",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "calm",
+          "x": 0.5,
+          "scale": 0.8
+        }
+      ],
+      "focus": "david",
+      "background": "wide rocky valley between two hills at dawn, golden mist, dusty ground, distant armies as tiny silhouettes"
+    },
+    {
+      "id": "s01b",
+      "at": "To fight a giant",
+      "background": "wide rocky valley at dawn, golden mist, dusty ground, a Philistine camp far away",
+      "actors": [
+        {
+          "char": "goliath",
+          "emotion": "smug",
+          "x": 0.5,
+          "scale": 0.9
+        }
+      ],
+      "focus": "goliath"
+    },
+    {
+      "id": "s01c",
+      "at": "And somehow",
+      "background": "wide rocky valley at dawn, golden mist, dusty ground",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "smug",
+          "x": 0.3,
+          "scale": 0.72
+        },
+        {
+          "char": "goliath",
+          "emotion": "awe",
+          "x": 0.74,
+          "scale": 0.8
+        }
+      ],
+      "focus": "david"
+    },
+    {
+      "id": "s02",
+      "at": "Two armies are camped",
+      "actors": [
+        {
+          "char": "israelite",
+          "emotion": "fear",
+          "x": 0.25,
+          "scale": 0.72
+        },
+        {
+          "char": "israelite",
+          "emotion": "sad",
+          "x": 0.52,
+          "scale": 0.72,
+          "flip": true
+        },
+        {
+          "char": "soldier",
+          "emotion": "fear",
+          "x": 0.8,
+          "scale": 0.72
+        }
+      ],
+      "background": "army camp on a rocky hillside at dawn, tents, spears stuck in the ground, banners, cold mist"
+    },
+    {
+      "id": "s03",
+      "at": "Every morning, for forty",
+      "actors": [
+        {
+          "char": "goliath",
+          "emotion": "smug",
+          "x": 0.5,
+          "scale": 0.85
+        }
+      ],
+      "background": "open dusty field between two armies at sunrise, long shadows, harsh low sun, empty ground"
+    },
+    {
+      "id": "s04",
+      "at": "And every morning, nobody",
+      "actors": [
+        {
+          "char": "israelite",
+          "emotion": "sad",
+          "x": 0.3,
+          "scale": 0.75
+        },
+        {
+          "char": "soldier",
+          "emotion": "fear",
+          "x": 0.68,
+          "scale": 0.75,
+          "flip": true
+        }
+      ],
+      "background": "army camp on a rocky hillside, cold blue morning light, tents and campfire smoke, empty foreground"
+    },
+    {
+      "id": "s05",
+      "at": "Enter David",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "warm",
+          "x": 0.5,
+          "scale": 0.82
+        }
+      ],
+      "background": "green shepherd hillside at golden hour, scattered rocks and tall grass, warm light"
+    },
+    {
+      "id": "s06",
+      "at": "He shows up",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "awe",
+          "x": 0.38,
+          "scale": 0.8
+        },
+        {
+          "char": "israelite",
+          "emotion": "sad",
+          "x": 0.75,
+          "scale": 0.72,
+          "flip": true
+        }
+      ],
+      "focus": "david",
+      "background": "edge of a war camp overlooking the valley, wooden fence, banners, dusty light"
+    },
+    {
+      "id": "s07",
+      "at": "King Saul tries to help",
+      "actors": [
+        {
+          "char": "saul",
+          "emotion": "warm",
+          "x": 0.3,
+          "scale": 0.8
+        },
+        {
+          "char": "david",
+          "emotion": "neutral",
+          "x": 0.7,
+          "scale": 0.74,
+          "flip": true
+        }
+      ],
+      "background": "inside a royal tent, rich red rugs, wooden chest, torches, warm candlelight"
+    },
+    {
+      "id": "s08",
+      "at": "So he takes it off",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "calm",
+          "x": 0.5,
+          "scale": 0.82
+        }
+      ],
+      "background": "clear stream in a rocky valley with smooth stones in the water, soft morning light"
+    },
+    {
+      "id": "s09",
+      "at": "Goliath sees him coming",
+      "actors": [
+        {
+          "char": "goliath",
+          "emotion": "laugh",
+          "x": 0.64,
+          "scale": 0.85
+        },
+        {
+          "char": "david",
+          "emotion": "calm",
+          "x": 0.22,
+          "scale": 0.55
+        }
+      ],
+      "focus": "goliath",
+      "background": "dusty battlefield between two armies, heat haze, Philistine banners in the distance"
+    },
+    {
+      "id": "s10",
+      "at": "Am I a dog",
+      "speaker": "goliath",
+      "actors": [
+        {
+          "char": "goliath",
+          "emotion": "smug",
+          "x": 0.62,
+          "scale": 0.85
+        },
+        {
+          "char": "david",
+          "emotion": "calm",
+          "x": 0.2,
+          "scale": 0.55
+        }
+      ],
+      "focus": "goliath",
+      "background": "dusty battlefield between two armies, heat haze, dramatic clouds, banners"
+    },
+    {
+      "id": "s11",
+      "at": "He feels insulted",
+      "actors": [
+        {
+          "char": "goliath",
+          "emotion": "anger",
+          "x": 0.62,
+          "scale": 0.85
+        },
+        {
+          "char": "david",
+          "emotion": "calm",
+          "x": 0.2,
+          "scale": 0.55
+        }
+      ],
+      "focus": "goliath",
+      "background": "dusty battlefield, tense atmosphere, low sun behind clouds"
+    },
+    {
+      "id": "s12",
+      "at": "David answers",
+      "speaker": "david",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "command",
+          "x": 0.34,
+          "scale": 0.78
+        },
+        {
+          "char": "goliath",
+          "emotion": "smug",
+          "x": 0.78,
+          "scale": 0.62,
+          "flip": true
+        }
+      ],
+      "focus": "david",
+      "background": "dusty battlefield valley, dramatic light breaking through clouds, dust in the air"
+    },
+    {
+      "id": "s13",
+      "at": "Then he loads one stone",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "command",
+          "x": 0.5,
+          "scale": 0.8
+        }
+      ],
+      "background": "close view of rocky battlefield ground, small stones, long shadows, dust particles"
+    },
+    {
+      "id": "s14",
+      "at": "Right in the forehead",
+      "actors": [
+        {
+          "char": "goliath",
+          "emotion": "awe",
+          "x": 0.62,
+          "scale": 0.82
+        },
+        {
+          "char": "david",
+          "emotion": "calm",
+          "x": 0.22,
+          "scale": 0.55
+        }
+      ],
+      "focus": "goliath",
+      "background": "dusty battlefield valley, dramatic sky, stillness"
+    },
+    {
+      "id": "s15",
+      "at": "And the giant just falls",
+      "actors": [
+        {
+          "char": "goliath",
+          "emotion": "awe",
+          "x": 0.6,
+          "scale": 0.82,
+          "fall": true
+        },
+        {
+          "char": "david",
+          "emotion": "calm",
+          "x": 0.2,
+          "scale": 0.55
+        }
+      ],
+      "focus": "goliath",
+      "background": "dusty battlefield valley, dust cloud drifting, low dramatic light"
+    },
+    {
+      "id": "s16",
+      "at": "Moral of the story",
+      "actors": [
+        {
+          "char": "david",
+          "emotion": "warm",
+          "x": 0.5,
+          "scale": 0.82
+        }
+      ],
+      "background": "quiet valley at sunrise after the battle, soft golden light, peaceful mist"
+    }
+  ]
+}
