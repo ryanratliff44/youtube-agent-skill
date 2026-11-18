@@ -1,6 +1,6 @@
 # Mary, mother of Jesus
 
 **Prompt token:**
-> Mary, a bean-shaped cartoon woman with a round olive-skinned head, soft blue headscarf, gentle dot eyes, small smile, plain cream robe body
+> Mary, a gentle beautiful young middle-eastern woman with soft rounded features, kind dark eyes, warm smile, blue head covering and a cream robe
 
-**Notes:** Teenage in nativity episodes; add 'grey strands of hair' for passion episodes.
+**Notes:** Teenage in nativity episodes; add grey strands of hair in passion episodes.

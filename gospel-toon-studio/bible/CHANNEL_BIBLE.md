@@ -35,16 +35,15 @@ Use everyday slang sparingly ("bro", "literally", "dude"), never slang that mock
 Simple "bean people" characters in front of rich, painterly, moodily lit backgrounds.
 
 **Style prompt prefix** (the B-roll artist prepends this to every shot):
-> 2D cartoon animation, simple minimalist bean-shaped characters with big round heads, dot eyes,
-> expressive eyebrows, tiny mouths, no nose, pill-shaped bodies and thin stick arms and legs, thick
-> dark brown outlines, flat colors on characters, highly detailed painterly background with depth
-> and texture, dramatic cinematic lighting, first-century Judea setting, vertical 9:16 composition,
-> consistent character design
+> high quality 2D cartoon animation, smooth fluid motion, charming appealing characters with soft
+> rounded features, big friendly expressive eyes and simple clean faces, thick clean outlines, vibrant
+> but harmonious colors, beautifully detailed painterly background with depth, warm cinematic lighting,
+> first-century Judea setting, vertical 9:16 composition, consistent character design
 
 **Negative prompt:**
-> photorealistic, 3d render, anime, realistic human proportions, detailed realistic faces, text,
-> watermark, logo, subtitles, extra limbs, deformed, blurry, gore, blood, modern clothing, modern
-> buildings, cars, phones
+> ugly, distorted face, deformed, melted, bad anatomy, extra limbs, creepy, scary face, realistic skin,
+> photorealistic, 3d render, anime, blurry, low quality, jittery, flickering, text, watermark, logo,
+> subtitles, gore, blood, modern clothing, modern buildings, cars, phones
 
 - Aspect: 9:16 (1080×1920) for shorts.
 - Shots: alternate wide establishing shot → medium character shot → reaction close-up. Cut every 1.5–3 s.

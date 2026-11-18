@@ -14,6 +14,7 @@ import copy
 import json
 import os
 import re
+import subprocess
 import time
 import urllib.parse
 import urllib.request
@@ -93,11 +94,26 @@ def run_shot(url: str, wf: dict, dest_base: str) -> str:
     raise RuntimeError("ComfyUI finished but returned no output file")
 
 
+def smooth(path: str, fps: int) -> None:
+    """Interpolate frames (16 -> 32 fps) so motion looks fluid; keeps the original if ffmpeg fails."""
+    tmp = path + ".smooth.mp4"
+    cmd = ["ffmpeg", "-v", "error", "-y", "-i", path, "-vf",
+           f"minterpolate=fps={fps}:mi_mode=mci:mc_mode=aobmc:vsbmc=1", "-c:v", "libx264", "-crf", "17",
+           "-pix_fmt", "yuv420p", tmp]
+    try:
+        subprocess.run(cmd, check=True)
+        os.replace(tmp, path)
+    except Exception as e:
+        print(f"  (smoothing skipped: {e})")
+
+
 def main() -> None:
     load_env()
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--no-smooth", action="store_true", help="skip frame interpolation")
+    ap.add_argument("--fps", type=int, default=32, help="smoothed frame rate")
     ap.add_argument("--only")
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--workflow", default=str(STUDIO / "comfy" / "wan_t2v_api.json"))
@@ -130,7 +146,10 @@ def main() -> None:
         wf = fill_workflow(base_wf, build_prompt(s, prefix), negative, seed, args.frames, args.width, args.height)
         print(f"{s['id']}: generating (seed {seed}) ...", flush=True)
         try:
-            print(f"{s['id']}: {run_shot(url, wf, str(ep / 'broll' / s['id']))}")
+            out = run_shot(url, wf, str(ep / 'broll' / s['id']))
+            if not args.no_smooth and out.endswith('.mp4'):
+                smooth(out, args.fps)
+            print(f"{s['id']}: {out}")
         except Exception as e:  # keep going; report at the end
             failed.append(s["id"])
             print(f"{s['id']}: FAILED {e}")

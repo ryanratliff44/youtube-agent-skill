@@ -1,6 +1,6 @@
 # Simon Peter
 
 **Prompt token:**
-> Peter, a stocky bean-shaped cartoon fisherman with a round tanned head, curly black hair, thick short black beard, big expressive eyebrows, brown tunic body with rope belt
+> Peter, a sturdy friendly fisherman with soft rounded features, big expressive eyes and eyebrows, curly dark hair, short beard, rolled-up brown tunic with a rope belt
 
-**Notes:** Impulsive and big-hearted. The go-to reaction face (panic, shock, awe) and the main source of gentle humor.
+**Notes:** Impulsive and big-hearted. Main source of gentle humor and big reactions.
