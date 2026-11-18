@@ -13,6 +13,7 @@ import argparse
 import copy
 import json
 import os
+import re
 import time
 import urllib.parse
 import urllib.request
@@ -35,21 +36,30 @@ def build_prompt(shot: dict, prefix: str) -> str:
     return ". ".join(p for p in [prefix, chars, shot["prompt"], camera] if p)
 
 
+CJK = re.compile(r"[\u4e00-\u9fff]")
+
+
 def fill_workflow(wf: dict, positive: str, negative: str, seed: int, frames: int, w: int, h: int) -> dict:
+    """Fill prompts, seed and size. Handles WanVideo text-encode nodes and native CLIPTextEncode nodes
+    (in the Wan examples the native negative prompt is the Chinese one)."""
     wf = copy.deepcopy(wf)
     found = False
     for node in wf.values():
         inputs = node.get("inputs", {})
-        if node.get("class_type") == "WanVideoTextEncode":
+        kind = node.get("class_type")
+        if kind == "WanVideoTextEncode":
             inputs["positive_prompt"] = positive
             inputs["negative_prompt"] = negative
             found = True
+        elif kind == "CLIPTextEncode" and isinstance(inputs.get("text"), str):
+            inputs["text"] = negative if CJK.search(inputs["text"]) else positive
+            found = True
         if "seed" in inputs and not isinstance(inputs["seed"], list):
             inputs["seed"] = seed
-        if node.get("class_type") == "WanVideoEmptyEmbeds":
+        if kind == "WanVideoEmptyEmbeds":
             inputs.update({"width": w, "height": h, "num_frames": frames})
     if not found:
-        raise SystemExit("Workflow has no WanVideoTextEncode node — is it exported in API format?")
+        raise SystemExit("Workflow has no text-prompt node. Was it exported with Export (API)?")
     return wf
 
 
@@ -91,7 +101,7 @@ def main() -> None:
     ap.add_argument("--only")
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--workflow", default=str(STUDIO / "comfy" / "wan_t2v_api.json"))
-    ap.add_argument("--frames", type=int, default=81, help="81 frames ≈ 5 s at 16 fps")
+    ap.add_argument("--frames", type=int, default=33, help="33 frames ≈ 2 s at 16 fps (81 ≈ 5 s)")
     ap.add_argument("--width", type=int, default=480)
     ap.add_argument("--height", type=int, default=832)
     args = ap.parse_args()
@@ -102,7 +112,7 @@ def main() -> None:
         wanted = set(args.only.split(","))
         shots = [s for s in shots if s["id"] in wanted]
     prefix, negative = style_prompts()
-    url = os.environ.get("COMFYUI_URL", "http://127.0.0.1:8188").rstrip("/")
+    url = os.environ.get("COMFYUI_URL", "http://127.0.0.1:8000").rstrip("/")
 
     if args.dry_run:
         for s in shots:
