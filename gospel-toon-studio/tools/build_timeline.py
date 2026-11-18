@@ -154,7 +154,25 @@ def anchored_timeline(ep, shots: list[dict], seg: dict, caps: list[dict], meta: 
         pos = found + 1
     total = round(seg["duration"] + args.outro, 3)
     timeline = []
+    BIG = {"goliath": 1.55}
+    PLATE_CAM = {"push": "zoom-in", "pull": "zoom-out", "pan left": "pan-left", "pan right": "pan-right", "hold": "drift", "drift": "drift"}
     for i, s in enumerate(shots):
+        if not s.get("world"):  # 2D characters on an AI-made background picture
+            actors, focus_pt = [], None
+            for k, a in enumerate(s["actors"]):
+                n = len(s["actors"])
+                ac = {"char": a["char"], "emotion": a.get("emotion", "neutral"), "x": a.get("x", (k + 1) / (n + 1)), "y": a.get("y", 0.84),
+                      "scale": a.get("scale", 0.8), "flip": a.get("flip", False), "glow": False,
+                      "speak": a["char"] == s.get("speaker"), "fall": a.get("fall", False)}
+                actors.append(ac)
+                if a["char"] == (s.get("focus") or (s["actors"][0]["char"])) and focus_pt is None:
+                    focus_pt = {"x": ac["x"], "y": max(0.05, ac["y"] - 0.4583 * ac["scale"] * BIG.get(a["char"], 1) * 0.83), "s": 1}
+            src = f"broll/{s['id']}.png" if (ep / "broll" / f"{s['id']}.png").exists() else None
+            motion = "punch" if i == 0 else PLATE_CAM.get(s.get("cam", "hold"), "drift")
+            timeline.append({"id": s["id"], "src": src, "type": "scene", "start": starts[i], "end": starts[i + 1] if i + 1 < len(shots) else total,
+                             "motion": motion, "text": "", "actors": actors, "mood": s.get("mood"), "focus": focus_pt, "cont": False})
+            print(f"  {s['id']:>5} starts {starts[i]:6.2f}s  {'picture' if src else 'PLACEHOLDER':<11} {motion:<9} \"{s['at']}\"")
+            continue
         actors = build_actors(s)
         world = s.get("world", "storm_night")
         place_in_world(actors, world)

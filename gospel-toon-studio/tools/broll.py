@@ -65,8 +65,11 @@ def fill_workflow(wf: dict, positive: str, negative: str, seed: int, frames: int
             inputs["negative_prompt"] = negative
             found = True
         elif kind == "CLIPTextEncode" and isinstance(inputs.get("text"), str):
-            inputs["text"] = negative if CJK.search(inputs["text"]) else positive
+            title = str(node.get("_meta", {}).get("title", "")).upper()
+            inputs["text"] = negative if (title == "NEGATIVE" or (not title and CJK.search(inputs["text"]))) else positive
             found = True
+        if kind == "EmptyLatentImage":
+            inputs.update({"width": w, "height": h})
         if "seed" in inputs and not isinstance(inputs["seed"], list):
             inputs["seed"] = seed
         if kind == "WanVideoEmptyEmbeds":
@@ -131,13 +134,17 @@ def main() -> None:
     ap.add_argument("--fps", type=int, default=32, help="smoothed frame rate")
     ap.add_argument("--only")
     ap.add_argument("--seed", type=int, default=None)
-    ap.add_argument("--workflow", default=str(STUDIO / "comfy" / "wan_t2v_api.json"))
+    ap.add_argument("--workflow", default=None, help="default: comfy/sdxl_bg_api.json for pictures, comfy/wan_t2v_api.json for video")
     ap.add_argument("--frames", type=int, default=33, help="33 frames ≈ 2 s at 16 fps (81 ≈ 5 s)")
-    ap.add_argument("--width", type=int, default=480)
-    ap.add_argument("--height", type=int, default=832)
+    ap.add_argument("--width", type=int, default=None)
+    ap.add_argument("--height", type=int, default=None)
     args = ap.parse_args()
 
     ep = episode_dir(args.episode)
+    still = args.mode == "still"
+    args.workflow = args.workflow or str(STUDIO / "comfy" / ("sdxl_bg_api.json" if still else "wan_t2v_api.json"))
+    args.width = args.width or (768 if still else 480)
+    args.height = args.height or (1344 if still else 832)
     shots = read_json(ep / "shotlist.json")["shots"]
     if args.only:
         wanted = set(args.only.split(","))

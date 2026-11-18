@@ -63,3 +63,12 @@ python tools/watch_video.py "<link>" --browser chrome              # if the site
 ```
 It writes `bible/references/watch/<name>/` with `report.md` (cuts, shot length, words per minute, hook,
 transcript, loudness) and picture sheets with timestamps. Paste the report and attach the pictures to Claude.
+
+## Current method (v2): AI background pictures + flat 2D characters
+1. `python tools/narrate_kokoro.py episodes/<slug>` (voice), then `python tools/captions.py episodes/<slug>` (word timing).
+2. `python tools/broll.py episodes/<slug>` makes one background picture per shot with SDXL in ComfyUI
+   (`comfy/sdxl_bg_api.json`, model `sd_xl_base_1.0.safetensors` in `models/checkpoints`).
+3. `python tools/build_timeline.py episodes/<slug>`: every shot is pinned to the narration (`at` = first words).
+4. `python tools/render.py episodes/<slug> --preview 10`, then without `--preview` for the full video.
+Characters live in `editor/src/two/Char2D.tsx` (david, goliath, saul, soldier, israelite, jesus, peter, john, mary, crowd).
+The older 3D engine in `editor/src/world/` is kept but is not used by default.

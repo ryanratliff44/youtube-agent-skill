@@ -1,5 +1,6 @@
 import {Composition} from 'remotion';
 import {Episode, Timeline} from './Episode';
+import {Kit} from './two/Kit';
 
 const sample: Timeline = {
 	fps: 30,
@@ -16,6 +17,8 @@ const sample: Timeline = {
 };
 
 export const RemotionRoot: React.FC = () => (
+	<>
+	<Composition id="Kit" component={Kit} fps={30} width={1620} height={760} durationInFrames={300} />
 	<Composition
 		id="Episode"
 		component={Episode}
@@ -31,4 +34,5 @@ export const RemotionRoot: React.FC = () => (
 			durationInFrames: Math.max(1, Math.ceil(props.duration * props.fps)),
 		})}
 	/>
+	</>
 );

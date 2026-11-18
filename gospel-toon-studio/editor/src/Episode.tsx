@@ -1,5 +1,5 @@
 import React from 'react';
-import {CHARS, Rig} from './Character';
+import {CHAR2D, Rig2D} from './two/Char2D';
 import {World, sceneFlash, stageToWorld, Placed} from './world/World';
 import {SCENES} from './world/Scenes';
 import {cameraFor} from './world/cameras';
@@ -25,6 +25,7 @@ export type Actor = {
 	scale: number;
 	flip: boolean;
 	glow?: boolean;
+	fall?: boolean; // topples over backwards early in the shot
 	speak?: boolean; // this character's mouth moves with the narration words
 	move?: {x?: number; y?: number; at?: [number, number]}; // walks to this spot during the shot
 	at?: [number, number]; // 3D scenes: where they stand on the stage (boat deck: x along the boat, z across)
@@ -115,18 +116,23 @@ const ActorView: React.FC<{actor: Actor; index: number; cont?: boolean; frames: 
 	const cap = captions.find((c) => abs >= c.start && abs < c.end);
 	const speaking = Boolean(actor.speak && cap && actor.emotion !== 'sleep'); // sleepers never talk
 	const mouth = speaking ? 0.3 + 0.7 * Math.abs(Math.sin(abs * 2 * Math.PI * 3.6 + index)) : 0;
-	const h = override ? override.h : CHAR_H * actor.scale;
+	const last = [...captions].reverse().find((c) => c.start <= abs);
+	const wordIdx = last ? captions.indexOf(last) : 0;
+	const wordAge = last ? abs - last.start : 9;
+	const fallK = actor.fall ? clamp01((local / fps - 0.3) / 0.5) : 0;
+	const fallDeg = fallK * fallK * 86 * (actor.flip ? 1 : -1);
+	const h = override ? override.h : CHAR_H * actor.scale * (CHAR2D[actor.char]?.big ?? 1);
 	const w = (h * 300) / 560;
 	if (override) walk = override.walk;
 	const left = override ? override.sx - w / 2 : x * width - w / 2;
 	const top = override ? override.sy - h : y * height - h;
 	return (
-		<div style={{position: 'absolute', left, top, width: w, height: h, transformOrigin: '50% 100%', transform: `scale(${0.85 + 0.15 * pop}) scaleX(${actor.flip ? -1 : 1})`, opacity: pop, filter: override ? `brightness(${override.light})` : undefined}}>
+		<div style={{position: 'absolute', left, top, width: w, height: h, transformOrigin: '50% 100%', transform: `scale(${0.85 + 0.15 * pop}) rotate(${fallDeg}deg) scaleX(${actor.flip ? -1 : 1})`, opacity: pop, filter: override ? `brightness(${override.light})` : undefined}}>
 			{actor.glow ? (
 				<div style={{position: 'absolute', left: -w * 0.5, top: h * 0.05, width: w * 2, height: w * 2, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,243,176,0.42) 0%, rgba(255,243,176,0.16) 40%, rgba(255,243,176,0) 68%)'}} />
 			) : null}
 			<div style={{position: 'absolute', left: '12%', right: '12%', bottom: -h * 0.02, height: h * 0.05, borderRadius: '50%', background: 'rgba(0,0,0,0.28)', filter: 'blur(6px)'}} />
-			<Rig def={CHARS[actor.char] ?? CHARS.crowd} emotion={actor.emotion} t={abs} mouth={mouth} walk={walk} speaking={speaking} phase={index * 0.37} />
+			<Rig2D def={actor.char} emotion={actor.emotion} t={abs} mouth={mouth} walk={walk} speaking={speaking} phase={index * 0.37} wordAge={wordAge} wordIdx={wordIdx} />
 		</div>
 	);
 };
@@ -166,6 +172,8 @@ const cameraMotion = (motion: string, frame: number, frames: number): Cam => {
 			return {t: `rotate(${-4 * snap(frame, 0, 10)}deg) scale(${1.12 + 0.04 * p})`, shake: 1.2, blur: 0};
 		case 'handheld':
 			return {t: `scale(${1.06 + 0.05 * p})`, shake: 2.4, blur: 0};
+		case 'drift':
+			return {t: `scale(${1.02 + 0.06 * p})`, shake: 1, blur: 0};
 		case 'zoom-in':
 			return {t: `scale(${1.04 + 0.12 * p})`, shake: 1, blur: 0};
 		case 'zoom-out':
@@ -251,7 +259,7 @@ const Moving: React.FC<{shot: Shot; frames: number; lead: number; from: number; 
 	return (
 		<AbsoluteFill style={{opacity: fade, overflow: 'hidden', backgroundColor: INK}}>
 			<AbsoluteFill style={{transform: angle, filter: cam.blur > 0.3 ? `blur(${cam.blur}px)` : undefined}}>
-			<AbsoluteFill style={{transform: cam.t, transformOrigin: '50% 58%'}}>
+			<AbsoluteFill style={{transform: cam.t, transformOrigin: shot.focus ? `${shot.focus.x * 100}% ${shot.focus.y * 100}%` : '50% 58%'}}>
 				{shot.type === 'scene' && !shot.src ? (
 					<AbsoluteFill style={{background: 'linear-gradient(180deg, #7fb6e6 0%, #cfe3f3 55%, #8fae6a 56%, #5f7f45 100%)'}} />
 				) : shot.type === 'video' && shot.src ? (

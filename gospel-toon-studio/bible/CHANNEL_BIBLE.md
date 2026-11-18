@@ -45,26 +45,13 @@ Simple "bean people" characters in front of rich, painterly, moodily lit backgro
 > photorealistic, 3d render, anime, blurry, low quality, jittery, flickering, text, watermark, logo,
 > subtitles, gore, blood, modern clothing, modern buildings, cars, phones
 
-**Background prompt prefix** (scenes are built in layers: AI-painted background + flat 2D character sprites):
-> beautiful detailed painterly 3D game environment render, rich textures, depth, dramatic cinematic
-> lighting and atmosphere, first-century Judea, empty scene with no people and no characters, vertical
-> 9:16 composition
+**Background prompt prefix** (scenes are built in layers: AI-made background picture + flat 2D character art):
+> stylized realistic 3D game environment render, Unreal Engine look, cinematic lighting, volumetric haze,
+> detailed textures, moody atmosphere, shallow depth of field, ancient Israel, empty scene, vertical 9:16 composition
 
 **Background negative prompt:**
-> floating boat, levitating objects, flying boat, boat in the air, people, characters, faces, figures, text, watermark, logo, subtitles, modern buildings, cars, phones,
-> blurry, low quality, ugly
-
-- Aspect: 9:16 (1080×1920) for shorts.
-- Shots: alternate wide establishing shot → medium character shot → reaction close-up. Cut every 1.5–3 s.
-- Every scene has a lighting idea: golden sunset, lantern glow in a dark room, stormy blue night
-  lit by lightning, soft dawn at the tomb.
-- Divine moments use a soft warm glow around Jesus, never lens flares or neon.
-- Jesus is drawn in the same simple style, with calm and kind expressions. He is never the punchline.
-
-## Characters
-Character sheets live in `bible/characters/<id>.md`. Each has a fixed **prompt token** that the
-B-roll artist pastes verbatim so the character looks the same in every shot. Add new characters
-there before using them.
+> people, characters, humans, faces, figures, animals, text, watermark, logo, signature, cartoon, anime,
+> drawing, blurry, low quality, deformed, modern buildings, cars, phones
 
 ## Background lessons (what works / what failed)
 - **Works best:** atmospheric scenes dominated by water, sky and light (e.g. "calm glassy lake under clearing
