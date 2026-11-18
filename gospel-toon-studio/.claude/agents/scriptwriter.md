@@ -26,22 +26,32 @@ An episode folder `episodes/<slug>/` and a topic (e.g. "Jesus calms the storm").
 - `narration.txt` — narration only, one beat per paragraph, blank line between beats. No stage
   directions. Spell out numbers and tricky names phonetically only if the narrator needs it
   (put the phonetic hint in `script.md`, not here).
-- `shotlist.json` (layered scenes: a painted background plus flat 2D characters):
+- `shotlist.json` (layered scenes: a painted background plus animated 2D characters):
   ```json
   {"shots": [
-    {"id": "s01", "beat": 0,
-     "background": "empty wooden fishing boat deck at night, huge storm waves, lightning in dark clouds",
-     "actors": [{"char": "jesus", "expr": "asleep", "x": 0.5, "scale": 1.05, "anim": "sway"}],
-     "mood": "storm", "camera": "slow push in", "onscreen_text": "Mark 4:35-41"}
+    {"id": "s03", "beat": 1, "speaker": "jesus", "camera": "handheld", "mood": "dusk",
+     "background": "empty pebble beach at dusk beside a calm lake, wooden boat resting in the shallow water",
+     "actors": [
+       {"char": "jesus", "emotion": "calm", "x": 0.3},
+       {"char": "peter", "emotion": "joy", "x": 0.1, "move": {"x": 0.52}},
+       {"char": "john", "emotion": "neutral", "x": 0.8}]}
   ]}
   ```
   `beat` is the 0-based paragraph index in `narration.txt`; give each beat 2-4 shots.
-  `background` describes the place only (never people). `actors` list who is on screen:
-  `char` must exist in `assets/characters/` (jesus, peter, john, mary, crowd); `expr` is one of
-  neutral, smile, worried, surprised, asleep, angry, calm; optional `x` (0-1 across), `scale`, `flip`,
-  `anim` (none, bob, sway, shake, hop, slide-in). `mood` is day, dusk, night, storm or calm.
-  `camera`: punch in (quick snap-in, the default feel), punch out, pulse (repeated quick zoom bumps), slow push in, pull out, pan left/right. Vary them shot to shot.
-  Use close-ups (one big actor), two-shots and empty establishing shots (no actors) for variety.
+  - `background`: the place only, never people (see the bible's background lessons).
+  - `actors[].char`: jesus, peter, john, mary, crowd (add more in `tools/make_characters.py` and
+    `editor/src/Character.tsx`). `emotion` drives the whole body, not just the face:
+    neutral, calm, joy (arms up, hopping), laugh (bouncing, mouth open), fear (trembling, arms up),
+    panic (arms flailing, jumping), anger (leaning in, fist up), sad (slumped), awe (stepping back, arms out),
+    sleep (breathing, head nod), smug (arm folded, head tilted), command (one arm raised).
+  - `move`: `{"x": 0.5}` (and optional `y`) makes the character WALK to that spot during the shot. Use it
+    often: characters should come and go, not stand still.
+  - `speaker`: whose mouth moves with the narration words (default: the first actor). Gestures and head nods
+    come with it. Optional per actor: `scale`, `flip`, `y`, `glow`.
+  - `mood`: day, dusk, night, storm or calm. Storms also shake the camera.
+  - `camera`: punch in, punch out, pulse, whip (fast pan with blur), dutch (tilted), handheld (shaky), zoom-in,
+    pull out, pan left/right. Vary them shot to shot; the builder also cuts each scene into quick angles.
+  Let the characters feel something. Pick the strongest emotion for each beat and let it show in the body.
 - `metadata.json`:
   ```json
   {"title": "...", "description": "...(include the reference)...", "hashtags": ["#Jesus", "#Bible"],

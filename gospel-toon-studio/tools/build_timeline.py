@@ -10,9 +10,10 @@ import itertools
 
 from common import episode_dir, read_json, write_json
 
-MOTIONS = ["punch", "pulse", "punch-out", "pulse"]  # default: quick zooms, varied shot to shot
+MOTIONS = ["punch", "whip", "pulse", "punch-out", "handheld", "dutch", "pulse"]  # default: dynamic camera, varied shot to shot
 CAMERA = {  # shotlist "camera" value -> editor motion
-    "punch in": "punch", "punch out": "punch-out", "pulse": "pulse",
+    "punch in": "punch", "punch out": "punch-out", "pulse": "pulse", "whip": "whip", "whip pan": "whip", "dutch": "dutch",
+    "handheld": "handheld",
     "slow push in": "zoom-in", "pull out": "zoom-out", "pan left": "pan-left", "pan right": "pan-right",
 }
 FLOOR_Y = 0.80  # where characters' feet stand (fraction of frame height)
@@ -45,25 +46,42 @@ def angles(actors: list[dict], n: int) -> list[dict | None]:
     return [seq[i % len(seq)] for i in range(n)]
 
 
+EXPR_TO_EMOTION = {"neutral": "neutral", "calm": "calm", "smile": "joy", "worried": "fear", "surprised": "awe",
+                   "asleep": "sleep", "angry": "anger", "sad": "sad"}
+EMOTIONS = ["neutral", "calm", "joy", "laugh", "fear", "panic", "anger", "sad", "awe", "sleep", "smug", "command"]
+
+
 def build_actors(shot: dict) -> list[dict]:
-    """Turn a shot's actors (or its plain characters list) into editor actors with sensible defaults."""
+    """Turn a shot's actors (or its plain characters list) into editor actors with sensible defaults.
+
+    Each actor: char, emotion (see EMOTIONS), optional x, y, scale, flip, glow, move {x, y}.
+    shot["speaker"] (a character id) says whose mouth moves with the narration; default = the first actor.
+    """
     raw = shot.get("actors")
     if raw is None:
         raw = [{"char": c} for c in shot.get("characters", [])]
     n = len(raw)
+    speaker = shot.get("speaker")
     out = []
     for i, a in enumerate(raw):
-        expr = a.get("expr", "neutral")
-        out.append({
-            "src": f"_chars/{a['char']}_{expr}.svg",
+        emo = a.get("emotion") or EXPR_TO_EMOTION.get(a.get("expr", "neutral"), "neutral")
+        if emo not in EMOTIONS:
+            raise SystemExit(f"Unknown emotion '{emo}' in shot {shot.get('id')}. Use one of: {', '.join(EMOTIONS)}")
+        actor = {
+            "char": a["char"], "emotion": emo,
             "x": a.get("x", (i + 1) / (n + 1)),
             "y": a.get("y", FLOOR_Y),
             "scale": a.get("scale", 1.0 if n <= 2 else 0.85),
-            "flip": a.get("flip", i >= n / 2 and n > 1),
-            "anim": a.get("anim", EXPR_ANIM.get(expr, "bob")),
+            "flip": a.get("flip", False),
             "glow": a.get("glow", a["char"] == "jesus"),
-        })
+            "speak": a.get("speak", (a["char"] == speaker) if speaker else i == 0),
+        }
+        if a.get("move"):
+            actor["move"] = a["move"]
+        out.append(actor)
     return out
+
+
 VIDEO_EXT = (".mp4", ".webm", ".mov")
 IMAGE_EXT = (".png", ".jpg", ".jpeg", ".webp")
 
@@ -124,7 +142,7 @@ def main() -> None:
                 timeline.append({
                     "id": shot["id"] if k == 0 else f"{shot['id']}.{k}", "src": src, "type": kind,
                     "start": a0, "end": a1,
-                    "motion": motion_main if k == 0 else ("punch", "zoom-in", "pulse")[k % 3],
+                    "motion": motion_main if k == 0 else ("punch", "pulse", "handheld", "whip")[k % 4],
                     "text": shot.get("onscreen_text", "") if k == 0 else "",
                     "actors": actors, "mood": shot.get("mood"),
                     "focus": angs[k], "cont": k > 0,

@@ -30,10 +30,6 @@ def main() -> None:
     timeline = ep / "timeline.json"
     if not timeline.exists():
         raise SystemExit("Run tools/build_timeline.py first")
-    chars = STUDIO / "assets" / "characters"
-    if not chars.exists() or not any(chars.glob("*.svg")):
-        raise SystemExit("No character art. Run: python tools/make_characters.py")
-    shutil.copytree(chars, ep / "_chars", dirs_exist_ok=True)
     npx = shutil.which("npx") or "npx"
     if not (STUDIO / "editor" / "node_modules").exists():
         run([shutil.which("npm") or "npm", "install", "--no-audit", "--no-fund"])

@@ -1,4 +1,5 @@
 import React from 'react';
+import {CHARS, Rig} from './Character';
 import {
 	AbsoluteFill,
 	Audio,
@@ -13,14 +14,18 @@ import {
 } from 'remotion';
 
 export type Actor = {
-	src: string;
+	char: string; // jesus, peter, john, mary, crowd
+	emotion: string; // neutral, calm, joy, laugh, fear, panic, anger, sad, awe, sleep, smug, command
 	x: number; // 0..1 across the frame (center of the character)
 	y: number; // 0..1 down the frame (where the feet stand)
 	scale: number;
 	flip: boolean;
-	anim: 'none' | 'bob' | 'sway' | 'shake' | 'slide-in' | 'hop';
 	glow?: boolean;
+	speak?: boolean; // this character's mouth moves with the narration words
+	move?: {x: number; y?: number}; // walks to this spot during the shot
 };
+
+type CaptionItem = {text: string; start: number; end: number};
 
 export type Shot = {
 	id: string;
@@ -76,37 +81,37 @@ const Card: React.FC<{title: string; subtitle?: string}> = ({title, subtitle}) =
 	);
 };
 
-const CHAR_H = 880; // sprite height in a 1920-tall frame at scale 1
+const CHAR_H = 880; // character height in a 1920-tall frame at scale 1
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 
-const ActorView: React.FC<{actor: Actor; index: number; cont?: boolean}> = ({actor, index, cont}) => {
+const ActorView: React.FC<{actor: Actor; index: number; cont?: boolean; frames: number; lead: number; from: number; captions: CaptionItem[]}> = ({actor, index, cont, frames, lead, from, captions}) => {
 	const frame = useCurrentFrame();
 	const {fps, width, height} = useVideoConfig();
-	const t = frame / fps + index * 0.37;
+	const local = Math.max(0, frame - lead);
+	const abs = (from + frame) / fps; // absolute time: animation keeps flowing across angle cuts
 	const pop = cont ? 1 : spring({frame: Math.max(0, frame - index * 4), fps, config: {damping: 14, stiffness: 140}, durationInFrames: 14});
-	let dx = 0;
-	let dy = 0;
-	let rot = 0;
-	if (actor.anim === 'bob') dy = Math.sin(t * 2 * Math.PI * 0.9) * 10;
-	if (actor.anim === 'sway') rot = Math.sin(t * 2 * Math.PI * 0.5) * 3.5;
-	if (actor.anim === 'hop') dy = -Math.abs(Math.sin(t * 2 * Math.PI * 1.2)) * 36;
-	if (actor.anim === 'shake') {
-		dx = Math.sin(t * 38) * 7;
-		dy = Math.sin(t * 29 + 1) * 6;
-		rot = Math.sin(t * 22) * 2.5;
+	let x = actor.x;
+	let y = actor.y;
+	let walk = 0;
+	if (actor.move) {
+		const k = clamp01(local / Math.max(1, frames * 0.85));
+		const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+		x = actor.x + (actor.move.x - actor.x) * e;
+		y = actor.y + ((actor.move.y ?? actor.y) - actor.y) * e;
+		walk = k > 0 && k < 1 ? 1 : 0;
 	}
-	if (actor.anim === 'slide-in') {
-		const k = spring({frame, fps, config: {damping: 18}, durationInFrames: 18});
-		dx = (actor.x < 0.5 ? -1 : 1) * (1 - k) * 520;
-	}
+	const cap = captions.find((c) => abs >= c.start && abs < c.end);
+	const speaking = Boolean(actor.speak && cap && actor.emotion !== 'sleep'); // sleepers never talk
+	const mouth = speaking ? 0.3 + 0.7 * Math.abs(Math.sin(abs * 2 * Math.PI * 3.6 + index)) : 0;
 	const h = CHAR_H * actor.scale;
 	const w = (h * 300) / 560;
 	return (
-		<div style={{position: 'absolute', left: actor.x * width - w / 2 + dx, top: actor.y * height - h + dy, width: w, height: h, transformOrigin: '50% 100%', transform: `scale(${0.85 + 0.15 * pop}) rotate(${rot}deg) scaleX(${actor.flip ? -1 : 1})`, opacity: pop}}>
+		<div style={{position: 'absolute', left: x * width - w / 2, top: y * height - h, width: w, height: h, transformOrigin: '50% 100%', transform: `scale(${0.85 + 0.15 * pop}) scaleX(${actor.flip ? -1 : 1})`, opacity: pop}}>
 			{actor.glow ? (
 				<div style={{position: 'absolute', left: -w * 0.5, top: h * 0.05, width: w * 2, height: w * 2, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,243,176,0.42) 0%, rgba(255,243,176,0.16) 40%, rgba(255,243,176,0) 68%)'}} />
 			) : null}
 			<div style={{position: 'absolute', left: '12%', right: '12%', bottom: -h * 0.02, height: h * 0.05, borderRadius: '50%', background: 'rgba(0,0,0,0.28)', filter: 'blur(6px)'}} />
-			<Img src={staticFile(actor.src)} style={{width: '100%', height: '100%'}} />
+			<Rig def={CHARS[actor.char] ?? CHARS.crowd} emotion={actor.emotion} t={abs} mouth={mouth} walk={walk} speaking={speaking} phase={index * 0.37} />
 		</div>
 	);
 };
@@ -119,37 +124,51 @@ const MOOD: Record<string, string> = {
 	calm: 'rgba(120,160,255,0.12)',
 };
 
-const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const snap = (frame: number, f0: number, f1: number) => 1 - Math.pow(1 - clamp01((frame - f0) / (f1 - f0)), 3); // fast ease-out
 
+type Cam = {t: string; shake: number; blur: number};
+
 // The whole scene (background + characters) moves together like a camera.
-const cameraTransform = (motion: string, frame: number, frames: number): string => {
+const cameraMotion = (motion: string, frame: number, frames: number): Cam => {
 	const p = clamp01(frame / Math.max(1, frames));
 	switch (motion) {
 		case 'punch': // quick snap in, then a slow creep
-			return `scale(${1 + 0.22 * snap(frame, 0, 6) + 0.05 * p})`;
+			return {t: `scale(${1 + 0.22 * snap(frame, 0, 6) + 0.05 * p})`, shake: 1, blur: 0};
 		case 'punch-out': // starts zoomed in, snaps back out
-			return `scale(${1.28 - 0.26 * snap(frame, 0, 7) + 0.04 * p})`;
+			return {t: `scale(${1.28 - 0.26 * snap(frame, 0, 7) + 0.04 * p})`, shake: 1, blur: 0};
 		case 'pulse': {
 			// a quick zoom-in bump every 0.75 s that eases back
 			const phase = frame % 22;
 			const kick = Math.pow(Math.max(0, 1 - phase / 8), 2) * 0.09;
-			return `scale(${1.05 + 0.05 * p + kick})`;
+			return {t: `scale(${1.05 + 0.05 * p + kick})`, shake: 1, blur: 0};
 		}
+		case 'whip': {
+			// whip pan: slides in fast with motion blur
+			const k = snap(frame, 0, 8);
+			return {t: `translateX(${(1 - k) * 14}%) scale(${1.06 + 0.2 * (1 - k)})`, shake: 1, blur: (1 - k) * 10};
+		}
+		case 'dutch': // tilted camera that rolls into place
+			return {t: `rotate(${-4 * snap(frame, 0, 10)}deg) scale(${1.12 + 0.04 * p})`, shake: 1.2, blur: 0};
+		case 'handheld':
+			return {t: `scale(${1.06 + 0.05 * p})`, shake: 2.4, blur: 0};
 		case 'zoom-in':
-			return `scale(${1.04 + 0.12 * p})`;
+			return {t: `scale(${1.04 + 0.12 * p})`, shake: 1, blur: 0};
 		case 'zoom-out':
-			return `scale(${1.16 - 0.12 * p})`;
+			return {t: `scale(${1.16 - 0.12 * p})`, shake: 1, blur: 0};
 		case 'pan-left':
-			return `scale(1.15) translateX(${4 - 8 * p}%)`;
+			return {t: `scale(1.15) translateX(${4 - 8 * p}%)`, shake: 1, blur: 0};
 		case 'pan-right':
-			return `scale(1.15) translateX(${-4 + 8 * p}%)`;
+			return {t: `scale(1.15) translateX(${-4 + 8 * p}%)`, shake: 1, blur: 0};
 		default:
-			return 'scale(1)';
+			return {t: 'scale(1)', shake: 1, blur: 0};
 	}
 };
 
-const Moving: React.FC<{shot: Shot; frames: number; lead: number}> = ({shot, frames, lead}) => {
+// A little handheld-camera drift on every shot so the picture never feels frozen (more in storms).
+const handheld = (frame: number, amp: number): string =>
+	`translate(${amp * (2.2 * Math.sin(frame * 0.17) + 1.4 * Math.sin(frame * 0.43 + 1))}px, ${amp * (2.2 * Math.sin(frame * 0.21 + 2) + 1.2 * Math.sin(frame * 0.51))}px) rotate(${amp * 0.25 * Math.sin(frame * 0.11)}deg)`;
+
+const Moving: React.FC<{shot: Shot; frames: number; lead: number; from: number; captions: CaptionItem[]}> = ({shot, frames, lead, from, captions}) => {
 	const frame = useCurrentFrame();
 	const {width: W, height: H} = useVideoConfig();
 	// New scene: a quick dissolve over the previous one (lead frames). New angle of the same scene: hard cut.
@@ -159,12 +178,14 @@ const Moving: React.FC<{shot: Shot; frames: number; lead: number}> = ({shot, fra
 	const lim = (fs - 1) / (2 * fs);
 	const fx = shot.focus ? Math.min(0.5 + lim, Math.max(0.5 - lim, shot.focus.x)) : 0.5;
 	const fy = shot.focus ? Math.min(0.5 + lim, Math.max(0.5 - lim, shot.focus.y)) : 0.5;
-	const angle = `translate(${fs * (0.5 - fx) * W}px, ${fs * (0.5 - fy) * H}px) scale(${fs})`;
+	const cam = cameraMotion(shot.motion, Math.max(0, frame - lead), frames);
+	const amp = cam.shake * (shot.mood === 'storm' ? 3 : 1);
+	const angle = `${handheld(from + frame, amp)} translate(${fs * (0.5 - fx) * W}px, ${fs * (0.5 - fy) * H}px) scale(${fs})`;
 	const media = {width: '100%', height: '100%', objectFit: 'cover' as const};
 	return (
 		<AbsoluteFill style={{opacity: fade, overflow: 'hidden', backgroundColor: INK}}>
-			<AbsoluteFill style={{transform: angle}}>
-			<AbsoluteFill style={{transform: cameraTransform(shot.motion, Math.max(0, frame - lead), frames), transformOrigin: '50% 58%'}}>
+			<AbsoluteFill style={{transform: angle, filter: cam.blur > 0.3 ? `blur(${cam.blur}px)` : undefined}}>
+			<AbsoluteFill style={{transform: cam.t, transformOrigin: '50% 58%'}}>
 				{shot.type === 'scene' && !shot.src ? (
 					<AbsoluteFill style={{background: 'linear-gradient(180deg, #7fb6e6 0%, #cfe3f3 55%, #8fae6a 56%, #5f7f45 100%)'}} />
 				) : shot.type === 'video' && shot.src ? (
@@ -176,7 +197,7 @@ const Moving: React.FC<{shot: Shot; frames: number; lead: number}> = ({shot, fra
 				)}
 				{shot.mood ? <AbsoluteFill style={{background: MOOD[shot.mood], mixBlendMode: 'multiply'}} /> : null}
 				{(shot.actors || []).map((a, i) => (
-					<ActorView key={i} actor={a} index={i} cont={shot.cont} />
+					<ActorView key={i} actor={a} index={i} cont={shot.cont} frames={frames} lead={lead} from={from} captions={captions} />
 				))}
 			</AbsoluteFill>
 			</AbsoluteFill>
@@ -225,7 +246,7 @@ export const Episode: React.FC<Timeline> = (t) => {
 				const frames = Math.max(1, f(shot.end) - f(shot.start));
 				return (
 					<Sequence key={shot.id} from={f(shot.start) - lead} durationInFrames={frames + lead} name={shot.id}>
-						<Moving shot={shot} frames={frames} lead={lead} />
+						<Moving shot={shot} frames={frames} lead={lead} from={f(shot.start) - lead} captions={t.captions} />
 					</Sequence>
 				);
 			})}

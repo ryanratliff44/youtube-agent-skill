@@ -10,15 +10,15 @@
       "actors": [
         {
           "char": "jesus",
-          "expr": "asleep",
+          "emotion": "sleep",
           "x": 0.5,
-          "scale": 1.05,
-          "anim": "sway"
+          "scale": 1.05
         }
       ],
       "mood": "storm",
       "camera": "punch in",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, huge storm waves towering behind, dark thunderclouds and lightning at night"
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, huge storm waves towering behind, dark thunderclouds and lightning at night",
+      "speaker": "jesus"
     },
     {
       "id": "s01b",
@@ -30,14 +30,15 @@
       "actors": [
         {
           "char": "peter",
-          "expr": "worried",
+          "emotion": "panic",
           "x": 0.5,
           "scale": 1.15
         }
       ],
       "mood": "storm",
-      "camera": "pulse",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain streaking, dark stormy night sky with lightning flash"
+      "camera": "whip",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain streaking, dark stormy night sky with lightning flash",
+      "speaker": "peter"
     },
     {
       "id": "s02",
@@ -62,23 +63,27 @@
       "actors": [
         {
           "char": "jesus",
-          "expr": "calm",
-          "x": 0.28
+          "emotion": "calm",
+          "x": 0.3
         },
         {
           "char": "peter",
-          "expr": "smile",
-          "x": 0.52
+          "emotion": "joy",
+          "x": 0.1,
+          "move": {
+            "x": 0.52
+          }
         },
         {
           "char": "john",
-          "expr": "neutral",
-          "x": 0.76
+          "emotion": "neutral",
+          "x": 0.8
         }
       ],
       "mood": "dusk",
-      "camera": "pulse",
-      "prompt": "empty pebble beach at dusk at the edge of a calm lake, a wooden fishing boat sitting low in the shallow water with its hull resting in the water and touching the shore, a rope lying on the wet pebbles, warm orange sky"
+      "camera": "handheld",
+      "prompt": "empty pebble beach at dusk at the edge of a calm lake, a wooden fishing boat sitting low in the shallow water with its hull resting in the water and touching the shore, a rope lying on the wet pebbles, warm orange sky",
+      "speaker": "jesus"
     },
     {
       "id": "s04",
@@ -90,14 +95,15 @@
       "actors": [
         {
           "char": "peter",
-          "expr": "worried",
+          "emotion": "fear",
           "x": 0.5,
           "scale": 1.1
         }
       ],
       "mood": "storm",
-      "camera": "punch in",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, violent storm with huge waves crashing over the side, dark night"
+      "camera": "dutch",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, violent storm with huge waves crashing over the side, dark night",
+      "speaker": "peter"
     },
     {
       "id": "s04b",
@@ -109,15 +115,15 @@
       "actors": [
         {
           "char": "john",
-          "expr": "surprised",
+          "emotion": "panic",
           "x": 0.5,
-          "scale": 1.1,
-          "anim": "hop"
+          "scale": 1.1
         }
       ],
       "mood": "storm",
-      "camera": "pulse",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, water sloshing on deck, rain and spray, stormy night"
+      "camera": "handheld",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, water sloshing on deck, rain and spray, stormy night",
+      "speaker": "john"
     },
     {
       "id": "s05",
@@ -129,15 +135,15 @@
       "actors": [
         {
           "char": "jesus",
-          "expr": "asleep",
+          "emotion": "sleep",
           "x": 0.5,
-          "scale": 1.15,
-          "anim": "sway"
+          "scale": 1.15
         }
       ],
       "mood": "storm",
       "camera": "punch in",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain falling, dim lantern light, stormy night"
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain falling, dim lantern light, stormy night",
+      "speaker": "jesus"
     },
     {
       "id": "s06",
@@ -150,22 +156,22 @@
       "actors": [
         {
           "char": "peter",
-          "expr": "surprised",
-          "x": 0.34,
-          "scale": 1.0,
-          "anim": "shake"
+          "emotion": "panic",
+          "x": 0.1,
+          "move": {
+            "x": 0.34
+          }
         },
         {
           "char": "jesus",
-          "expr": "asleep",
-          "x": 0.68,
-          "scale": 1.0,
-          "anim": "sway"
+          "emotion": "sleep",
+          "x": 0.68
         }
       ],
       "mood": "storm",
-      "camera": "pulse",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, stormy night with spray, lantern swinging"
+      "camera": "handheld",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, stormy night with spray, lantern swinging",
+      "speaker": "peter"
     },
     {
       "id": "s06b",
@@ -177,15 +183,15 @@
       "actors": [
         {
           "char": "peter",
-          "expr": "angry",
+          "emotion": "anger",
           "x": 0.5,
-          "scale": 1.15,
-          "anim": "shake"
+          "scale": 1.15
         }
       ],
       "mood": "storm",
-      "camera": "punch in",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain and spray flying, dark stormy blue light"
+      "camera": "whip",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, rain and spray flying, dark stormy blue light",
+      "speaker": "peter"
     },
     {
       "id": "s07",
@@ -197,15 +203,15 @@
       "actors": [
         {
           "char": "jesus",
-          "expr": "calm",
+          "emotion": "command",
           "x": 0.5,
-          "scale": 1.1,
-          "anim": "bob"
+          "scale": 1.1
         }
       ],
       "mood": "storm",
-      "camera": "pulse",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, wind howling, huge dark clouds above rough sea, one ray of light breaking through"
+      "camera": "punch in",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, wind howling, huge dark clouds above rough sea, one ray of light breaking through",
+      "speaker": "jesus"
     },
     {
       "id": "s07b",
@@ -218,19 +224,17 @@
       "actors": [
         {
           "char": "peter",
-          "expr": "surprised",
-          "x": 0.35,
-          "anim": "none"
+          "emotion": "awe",
+          "x": 0.35
         },
         {
           "char": "john",
-          "expr": "surprised",
-          "x": 0.68,
-          "anim": "none"
+          "emotion": "awe",
+          "x": 0.68
         }
       ],
       "mood": "calm",
-      "camera": "punch in",
+      "camera": "pulse",
       "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, the wind suddenly still, water droplets hanging in the air, warm glow spreading over the sea"
     },
     {
@@ -254,18 +258,19 @@
       "actors": [
         {
           "char": "peter",
-          "expr": "surprised",
+          "emotion": "awe",
           "x": 0.35
         },
         {
           "char": "john",
-          "expr": "surprised",
+          "emotion": "laugh",
           "x": 0.68
         }
       ],
       "mood": "night",
-      "camera": "punch in",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night"
+      "camera": "handheld",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night",
+      "speaker": "peter"
     },
     {
       "id": "s09b",
@@ -277,14 +282,15 @@
       "actors": [
         {
           "char": "jesus",
-          "expr": "smile",
+          "emotion": "joy",
           "x": 0.5,
           "scale": 1.1
         }
       ],
       "mood": "calm",
-      "camera": "pulse",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night with soft glow"
+      "camera": "punch in",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night with soft glow",
+      "speaker": "jesus"
     },
     {
       "id": "s09c",
@@ -297,20 +303,19 @@
       "actors": [
         {
           "char": "peter",
-          "expr": "worried",
-          "x": 0.35,
-          "anim": "bob"
+          "emotion": "smug",
+          "x": 0.35
         },
         {
           "char": "john",
-          "expr": "neutral",
-          "x": 0.68,
-          "anim": "bob"
+          "emotion": "awe",
+          "x": 0.68
         }
       ],
       "mood": "night",
-      "camera": "punch in",
-      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night"
+      "camera": "whip",
+      "prompt": "an empty wooden fishing boat deck with curved planked hull, a mast with a patched sail, coiled ropes and a soft cushion in the stern, calm moonlit night",
+      "speaker": "john"
     },
     {
       "id": "s10",
@@ -322,7 +327,7 @@
       "actors": [
         {
           "char": "jesus",
-          "expr": "calm",
+          "emotion": "calm",
           "x": 0.5,
           "scale": 1.05
         }
@@ -330,7 +335,8 @@
       "mood": "night",
       "camera": "pull out",
       "prompt": "calm moonlit lake with distant shore lights, stars reflected in the water, a wooden fishing boat deck in the foreground with a warm lantern",
-      "onscreen_text": "Mark 4:35-41"
+      "onscreen_text": "Mark 4:35-41",
+      "speaker": "jesus"
     }
   ]
 }
